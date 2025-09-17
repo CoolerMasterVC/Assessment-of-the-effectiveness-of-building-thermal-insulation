@@ -1,74 +1,116 @@
 package repository
 
 import (
+	"Lab1/internal/models"
 	"fmt"
 	"strings"
 )
 
 type Repository struct {
+	materials []models.Material
+	cart      models.Cart
 }
 
 func NewRepository() (*Repository, error) {
-	return &Repository{}, nil
-}
-
-type Order struct { // вот наша новая структура
-	ID    int    // поля структур, которые передаются в шаблон
-	Title string // ОБЯЗАТЕЛЬНО должны быть написаны с заглавной буквы (то есть публичными)
-}
-
-func (r *Repository) GetOrders() ([]Order, error) {
-	// имитируем работу с БД. Типа мы выполнили sql запрос и получили эти строки из БД
-	orders := []Order{ // массив элементов из наших структур
+	materials := []models.Material{
 		{
-			ID:    1,
-			Title: "first order",
+			ID:          1,
+			Name:        "Минеральная вата",
+			PricePerM2:  650,
+			Lambda:      0.045,
+			Description: "Эффективный утеплитель с отличными звукоизоляционными свойствами",
+			ImageURL:    "/static/img/mineral_wool.jpg",
 		},
 		{
-			ID:    2,
-			Title: "second order",
+			ID:          2,
+			Name:        "Пенополистирол",
+			PricePerM2:  450,
+			Lambda:      0.038,
+			Description: "Легкий и влагостойкий материал для утепления",
+			ImageURL:    "/static/img/polystyrene.jpg",
 		},
 		{
-			ID:    3,
-			Title: "third order",
+			ID:          3,
+			Name:        "PIR-плиты",
+			PricePerM2:  1200,
+			Lambda:      0.028,
+			Description: "Современный высокоэффективный утеплитель с низкой теплопроводностью",
+			ImageURL:    "/static/img/pir_plates.jpg",
+		},
+		{
+			ID:          4,
+			Name:        "PIR-плиты",
+			PricePerM2:  1200,
+			Lambda:      0.028,
+			Description: "Современный высокоэффективный утеплитель с низкой теплопроводностью",
+			ImageURL:    "/static/img/pir_plates.jpg",
+		},
+		{
+			ID:          5,
+			Name:        "PIR-плиты",
+			PricePerM2:  1200,
+			Lambda:      0.028,
+			Description: "Современный высокоэффективный утеплитель с низкой теплопроводностью",
+			ImageURL:    "/static/img/pir_plates.jpg",
 		},
 	}
-	// обязательно проверяем ошибки, и если они появились - передаем выше, то есть хендлеру
-	// тут я снова искусственно обработаю "ошибку" чисто чтобы показать вам как их передавать выше
-	if len(orders) == 0 {
-		return nil, fmt.Errorf("массив пустой")
+
+	cart := models.Cart{
+		ID:    1,
+		Items: []models.CartItem{},
 	}
 
-	return orders, nil
+	return &Repository{
+		materials: materials,
+		cart:      cart,
+	}, nil
 }
 
-func (r *Repository) GetOrder(id int) (Order, error) {
-	// тут у вас будет логика получения нужной услуги, тоже наверное через цикл в первой лабе, и через запрос к БД начиная со второй
-	orders, err := r.GetOrders()
-	if err != nil {
-		return Order{}, err // тут у нас уже есть кастомная ошибка из нашего метода, поэтому мы можем просто вернуть ее
-	}
+func (r *Repository) GetAllMaterials() ([]models.Material, error) {
+	return r.materials, nil
+}
 
-	for _, order := range orders {
-		if order.ID == id {
-			return order, nil // если нашли, то просто возвращаем найденный заказ (услугу) без ошибок
+func (r *Repository) GetMaterialByID(id int) (models.Material, error) {
+	for _, material := range r.materials {
+		if material.ID == id {
+			return material, nil
 		}
 	}
-	return Order{}, fmt.Errorf("заказ не найден") // тут нужна кастомная ошибка, чтобы понимать на каком этапе возникла ошибка и что произошло
+	return models.Material{}, fmt.Errorf("материал не найден")
 }
 
-func (r *Repository) GetOrdersByTitle(title string) ([]Order, error) {
-	orders, err := r.GetOrders()
-	if err != nil {
-		return []Order{}, err
-	}
-
-	var result []Order
-	for _, order := range orders {
-		if strings.Contains(strings.ToLower(order.Title), strings.ToLower(title)) {
-			result = append(result, order)
+func (r *Repository) GetMaterialsByName(name string) ([]models.Material, error) {
+	var result []models.Material
+	for _, material := range r.materials {
+		if strings.Contains(strings.ToLower(material.Name), strings.ToLower(name)) {
+			result = append(result, material)
 		}
 	}
-
 	return result, nil
+}
+
+func (r *Repository) GetCart() (models.Cart, error) {
+	totalSavings := 0.0
+	for _, item := range r.cart.Items {
+		material, _ := r.GetMaterialByID(item.MaterialID)
+		monthlySavings := item.Area * (0.1 / material.Lambda) * 24 * 30 * 0.5
+		totalSavings += monthlySavings
+	}
+	r.cart.TotalSavings = totalSavings
+	return r.cart, nil
+}
+
+func (r *Repository) AddToCart(materialID int, area float64) error {
+	for i, item := range r.cart.Items {
+		if item.MaterialID == materialID {
+			r.cart.Items[i].Area += area
+			return nil
+		}
+	}
+
+	r.cart.Items = append(r.cart.Items, models.CartItem{
+		MaterialID: materialID,
+		Area:       area,
+	})
+	return nil
 }
