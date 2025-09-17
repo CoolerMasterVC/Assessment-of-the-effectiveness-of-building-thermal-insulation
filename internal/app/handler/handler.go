@@ -74,16 +74,30 @@ func (h *Handler) CartHandler(c *gin.Context) {
 	var cartItems []struct {
 		Material models.Material
 		Area     float64
+		Savings  float64
 	}
 
-	for _, item := range cart.Items {
-		material, _ := h.repo.GetMaterialByID(item.MaterialID)
+	// Статичные данные для корзины
+	staticItems := []struct {
+		MaterialID int
+		Area       float64
+	}{
+		{MaterialID: 1, Area: 15.5},
+		{MaterialID: 3, Area: 22.0},
+	}
+
+	for _, staticItem := range staticItems {
+		material, _ := h.repo.GetMaterialByID(staticItem.MaterialID)
+		monthlySavings := staticItem.Area * (0.1 / material.Lambda) * 24 * 30 * 0.5
+
 		cartItems = append(cartItems, struct {
 			Material models.Material
 			Area     float64
+			Savings  float64
 		}{
 			Material: material,
-			Area:     item.Area,
+			Area:     staticItem.Area,
+			Savings:  monthlySavings,
 		})
 	}
 

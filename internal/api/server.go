@@ -26,7 +26,7 @@ func StartServer() {
 	r.GET("/", handler.IndexHandler)
 	r.GET("/material/:id", handler.MaterialHandler)
 	r.GET("/cart", handler.CartHandler)
-	r.POST("/cart/add/:id", handler.AddToCartHandler)
+	//r.POST("/cart/add/:id", handler.AddToCartHandler)
 
 	r.Run()
 	log.Println("Server down")

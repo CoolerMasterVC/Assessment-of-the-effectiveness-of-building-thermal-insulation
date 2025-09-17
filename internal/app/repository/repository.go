@@ -19,7 +19,7 @@ func NewRepository() (*Repository, error) {
 			PricePerM2:  650,
 			Lambda:      0.045,
 			Description: "Эффективный утеплитель с отличными звукоизоляционными свойствами",
-			ImageURL:    "/static/img/mineral_wool.jpg",
+			ImageURL:    "http://localhost:9000/images/mineral_wool.jpg",
 		},
 		{
 			ID:          2,
@@ -27,7 +27,7 @@ func NewRepository() (*Repository, error) {
 			PricePerM2:  450,
 			Lambda:      0.038,
 			Description: "Легкий и влагостойкий материал для утепления",
-			ImageURL:    "/static/img/polystyrene.jpg",
+			ImageURL:    "http://localhost:9000/images/polystyrene.jpg",
 		},
 		{
 			ID:          3,
@@ -35,23 +35,7 @@ func NewRepository() (*Repository, error) {
 			PricePerM2:  1200,
 			Lambda:      0.028,
 			Description: "Современный высокоэффективный утеплитель с низкой теплопроводностью",
-			ImageURL:    "/static/img/pir_plates.jpg",
-		},
-		{
-			ID:          4,
-			Name:        "PIR-плиты",
-			PricePerM2:  1200,
-			Lambda:      0.028,
-			Description: "Современный высокоэффективный утеплитель с низкой теплопроводностью",
-			ImageURL:    "/static/img/pir_plates.jpg",
-		},
-		{
-			ID:          5,
-			Name:        "PIR-плиты",
-			PricePerM2:  1200,
-			Lambda:      0.028,
-			Description: "Современный высокоэффективный утеплитель с низкой теплопроводностью",
-			ImageURL:    "/static/img/pir_plates.jpg",
+			ImageURL:    "http://localhost:9000/images/pir_plates.jpg",
 		},
 	}
 

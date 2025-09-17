@@ -12,18 +12,20 @@
             <a href="/" class="logo">
                 <span>🏠</span>
             </a>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="main-header">
+            <h1>Теплоизоляционные материалы</h1>
             <form action="/" method="GET" class="search-form">
                 <input type="text" name="search" placeholder="Поиск материалов..." value="{{ .Search }}">
                 <button type="submit">Найти</button>
             </form>
             <a href="/cart" class="cart-link">
-                📋 Заявка #{{.Cart.ID}} ({{len .Cart.Items}})
+                📋 Корзина
             </a>
         </div>
-    </header>
-
-    <main class="container">
-        <h1>Теплоизоляционные материалы</h1>
         
         <div class="materials-grid">
             {{ range .Materials }}
