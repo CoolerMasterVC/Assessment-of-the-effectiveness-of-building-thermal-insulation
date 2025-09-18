@@ -10,7 +10,7 @@
     <header>
         <div class="container">
             <a href="/" class="logo">
-                <span>🏠</span>
+                <img src="http://localhost:9000/images/home_icon.png" alt="Главная страница" class="logo-image">
             </a>
         </div>
     </header>
@@ -23,8 +23,6 @@
                 <p class="price">Цена: {{.Material.PricePerM2}} руб./м²</p>
                 <p class="lambda">Коэффициент теплопроводности: {{.Material.Lambda}} Вт/(м·K)</p>
                 <p class="description">{{.Material.Description}}</p>
-                
-                <!-- Убрали форму добавления в корзину -->
             </div>
         </div>
     </main>

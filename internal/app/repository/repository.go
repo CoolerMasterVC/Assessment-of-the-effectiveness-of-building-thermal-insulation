@@ -15,7 +15,7 @@ func NewRepository() (*Repository, error) {
 	materials := []models.Material{
 		{
 			ID:          1,
-			Name:        "Пенополистирол",
+			Name:        "Минеральная вата",
 			PricePerM2:  650,
 			Lambda:      0.045,
 			Description: "Эффективный утеплитель с отличными звукоизоляционными свойствами",
@@ -39,19 +39,11 @@ func NewRepository() (*Repository, error) {
 		},
 		{
 			ID:          4,
-			Name:        "PIR-плиты",
-			PricePerM2:  1200,
-			Lambda:      0.028,
-			Description: "Современный высокоэффективный утеплитель с низкой теплопроводностью",
-			ImageURL:    "http://localhost:9000/images/pir_plates.jpg",
-		},
-		{
-			ID:          5,
-			Name:        "PIR-плиты",
-			PricePerM2:  1200,
-			Lambda:      0.028,
-			Description: "Современный высокоэффективный утеплитель с низкой теплопроводностью",
-			ImageURL:    "http://localhost:9000/images/pir_plates.jpg",
+			Name:        "Экструдированный пенополистирол",
+			PricePerM2:  550,
+			Lambda:      0.033,
+			Description: "Прочный влагостойкий утеплитель для фундаментов и фасадов",
+			ImageURL:    "http://localhost:9000/images/xps.jpg",
 		},
 	}
 
