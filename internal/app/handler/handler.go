@@ -74,6 +74,7 @@ func (h *Handler) CartHandler(c *gin.Context) {
 	var cartItems []struct {
 		Material models.Material
 		Area     float64
+		HeatLoss float64
 		Savings  float64
 	}
 
@@ -86,17 +87,32 @@ func (h *Handler) CartHandler(c *gin.Context) {
 		{MaterialID: 3, Area: 22.0},
 	}
 
+	// Параметры расчета
+	indoorTemp := 22.0   // °C
+	outdoorTemp := -15.0 // °C
+	tempDiff := indoorTemp - outdoorTemp
+
 	for _, staticItem := range staticItems {
 		material, _ := h.repo.GetMaterialByID(staticItem.MaterialID)
-		monthlySavings := staticItem.Area * (0.1 / material.Lambda) * 24 * 30 * 0.5
+
+		// Расчет теплопотерь: Q = (ΔT * Area) / (thickness / lambda)
+		// Предполагаем толщину утеплителя 0.1 м (10 см)
+		thickness := 0.1
+		heatLoss := (tempDiff * staticItem.Area) / (thickness / material.Lambda)
+
+		// Расчет экономии (упрощенный)
+		energyPrice := 5.0 // руб/кВт·ч
+		monthlySavings := (heatLoss / 1000) * 24 * 30 * energyPrice * 0.3
 
 		cartItems = append(cartItems, struct {
 			Material models.Material
 			Area     float64
+			HeatLoss float64
 			Savings  float64
 		}{
 			Material: material,
 			Area:     staticItem.Area,
+			HeatLoss: heatLoss,
 			Savings:  monthlySavings,
 		})
 	}
