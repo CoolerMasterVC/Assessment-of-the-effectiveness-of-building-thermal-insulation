@@ -37,10 +37,13 @@ func (h *Handler) IndexHandler(c *gin.Context) {
 
 	cart, _ := h.repo.GetCart()
 
+	cartItemCount := len(cart.Items)
+
 	c.HTML(http.StatusOK, "index.html", gin.H{
-		"Materials": materials,
-		"Cart":      cart,
-		"Search":    searchQuery,
+		"Materials":     materials,
+		"Cart":          cart,
+		"Search":        searchQuery,
+		"CartItemCount": cartItemCount,
 	})
 }
 
