@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.Material.Name}}</title>
+    <link rel="stylesheet" href="/static/styles/style.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <a href="/" class="logo">
+                <img src="http://localhost:9000/images/home_icon.png" alt="Главная страница" class="logo-image">
+            </a>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="material-detail">
+            <img src="{{.Material.ImageURL}}" alt="{{.Material.Name}}" class="material-detail-image">
+            <div class="material-detail-info">
+                <h1>{{.Material.Name}}</h1>
+                <p class="price">Цена: {{.Material.PricePerM2}} руб./м²</p>
+                <p class="lambda">Коэффициент теплопроводности: {{.Material.Lambda}} Вт/(м·K)</p>
+                <p class="description">{{.Material.Description}}</p>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

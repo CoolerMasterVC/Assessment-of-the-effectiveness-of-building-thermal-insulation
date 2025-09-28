@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Теплоизоляционные материалы</title>
+    <link rel="stylesheet" href="/static/styles/style.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <a href="/" class="logo">
+                <img src="http://localhost:9000/images/home_icon.png" alt="Главная страница" class="logo-image">
+            </a>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="main-header">
+            <h1>Теплоизоляционные материалы</h1>
+            <form action="/" method="GET" class="search-form">
+                <input type="text" name="search" placeholder="Поиск материалов..." value="{{ .Search }}">
+                <button type="submit">Найти</button>
+            </form>
+            <a href="/econom_materials/1" class="cart-icon">
+                <img src="http://localhost:9000/images/cart.png" alt="Заявка" class="cart-material-image">
+                <span class="cart-count">{{ .CartItemCount }}</span>
+            </a>
+        </div>
+        
+        <div class="materials-grid">
+            {{ range .Materials }}
+            <div class="material-card" onclick="window.location.href='/material/{{.ID}}'">
+                <img src="{{.ImageURL}}" alt="{{.Name}}" class="material-image">
+                <div class="material-info">
+                    <h3>{{.Name}}</h3>
+                    <p class="price">{{.PricePerM2}} руб./м²</p>
+                    <p class="lambda">λ: {{.Lambda}} Вт/(м·K)</p>
+                </div>
+            </div>
+            {{ end }}
+        </div>
+
+        {{ if not .Materials }}
+        <div class="no-results">
+            <p>Материалы не найдены</p>
+        </div>
+        {{ end }}
+    </main>
+</body>
+</html>
