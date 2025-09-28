@@ -19,13 +19,20 @@
         <div class="main-header">
             <h1>Теплоизоляционные материалы</h1>
             <form action="/" method="GET" class="search-form">
-                <input type="text" name="search" placeholder="Поиск материалов..." value="{{ .Search }}">
+                <input type="text" name="material_search" placeholder="Поиск материалов..." value="{{ .SearchQuery }}">
                 <button type="submit">Найти</button>
             </form>
-            <a href="/econom_materials/1" class="cart-icon">
+            {{if .HasDraft}}
+            <a href="/application/{{.CurrentApplication.ID}}" class="cart-icon">
                 <img src="http://localhost:9000/images/cart.png" alt="Заявка" class="cart-material-image">
-                <span class="cart-count">{{ .CartItemCount }}</span>
+                <span class="cart-count">{{ .CartCount }}</span>
             </a>
+            {{else}}
+            <div class="cart-icon" style="opacity: 0.5;">
+                <img src="http://localhost:9000/images/cart.png" alt="Заявка" class="cart-material-image">
+                <span class="cart-count">0</span>
+            </div>
+            {{end}}
         </div>
         
         <div class="materials-grid">

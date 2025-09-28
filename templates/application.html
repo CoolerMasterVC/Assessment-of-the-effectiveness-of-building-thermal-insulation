@@ -23,15 +23,15 @@
         <div class="calculation-params">
             <div class="param-group">
                 <label for="indoor-temp">Температура помещения (°C):</label>
-                <input type="number" id="indoor-temp" name="indoor-temp" value="{{.Cart.IndoorTemp}}" readonly>
+                <input type="number" id="indoor-temp" name="indoor-temp" value="{{.Application.IndoorTemp}}" readonly>
             </div>
             <div class="param-group">
                 <label for="outdoor-temp">Температура внешняя (°C):</label>
-                <input type="number" id="outdoor-temp" name="outdoor-temp" value="{{.Cart.OutdoorTemp}}" readonly>
+                <input type="number" id="outdoor-temp" name="outdoor-temp" value="{{.Application.OutdoorTemp}}" readonly>
             </div>
             <div class="param-group">
                 <label for="total-area">Общая площадь утепления (м²):</label>
-                <input type="number" id="total-area" name="total-area" value="{{.Cart.TotalArea}}" readonly>
+                <input type="number" id="total-area" name="total-area" value="{{.Application.TotalArea}}" readonly>
             </div>
         </div>
         
@@ -72,10 +72,22 @@
             {{ end }}
         </div>
 
+        {{ if .TotalSavings }}
+        <div class="cart-total">
+            <h3>Общая экономия: {{printf "%.2f" .TotalSavings}} руб./месяц</h3>
+        </div>
+        {{ end }}
+
         {{ if not .CartItems }}
         <div class="empty-cart">
             <p>Заявка пуста</p>
             <a href="/">Выбрать материалы</a>
+        </div>
+        {{ else }}
+        <div style="text-align: center; margin-top: 2rem;">
+            <form method="POST" action="/application/{{.Application.ID}}/delete">
+                <button type="submit" class="delete-button">Удалить заявку</button>
+            </form>
         </div>
         {{ end }}
     </main>

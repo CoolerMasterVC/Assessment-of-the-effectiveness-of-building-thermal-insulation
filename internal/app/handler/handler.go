@@ -1,116 +1,50 @@
+// internal/app/handler/handler.go
 package handler
 
 import (
 	"Lab1/internal/app/repository"
-	"Lab1/internal/models"
-	"net/http"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 )
 
 type Handler struct {
-	repo *repository.Repository
+	Repository *repository.Repository
 }
 
 func NewHandler(r *repository.Repository) *Handler {
 	return &Handler{
-		repo: r,
+		Repository: r,
 	}
 }
 
-func (h *Handler) IndexHandler(c *gin.Context) {
-	searchQuery := c.Query("search")
-	var materials []models.Material
-	var err error
-
-	if searchQuery != "" {
-		materials, err = h.repo.GetMaterialsByName(searchQuery)
-	} else {
-		materials, err = h.repo.GetAllMaterials()
-	}
-
-	if err != nil {
-		logrus.Error(err)
-	}
-
-	cart, _ := h.repo.GetCart(1)
-
-	cartItemCount := len(cart.Items)
-
-	c.HTML(http.StatusOK, "index.html", gin.H{
-		"Materials":     materials,
-		"Cart":          cart,
-		"Search":        searchQuery,
-		"CartItemCount": cartItemCount,
+func (h *Handler) RegisterHandler(router *gin.Engine) {
+	router.GET("/ping", func(c *gin.Context) {
+		c.String(200, "pong")
 	})
-}
 
-func (h *Handler) MaterialHandler(c *gin.Context) {
-	idStr := c.Param("id")
-	id, err := strconv.Atoi(idStr)
-	if err != nil {
-		logrus.Error(err)
-		c.Redirect(http.StatusFound, "/")
-		return
-	}
-
-	material, err := h.repo.GetMaterialByID(id)
-	if err != nil {
-		logrus.Error(err)
-		c.Redirect(http.StatusFound, "/")
-		return
-	}
-
-	c.HTML(http.StatusOK, "material.html", gin.H{
-		"Material": material,
-	})
-}
-
-func (h *Handler) CartHandler(c *gin.Context) {
-	idStr := c.Param("id")
-	id, err := strconv.Atoi(idStr)
-	if err != nil {
-		logrus.Error(err)
-		c.Redirect(http.StatusFound, "/")
-		return
-	}
-
-	cart, err := h.repo.GetCart(id)
-	if err != nil {
-		logrus.Error(err)
-	}
-
-	var cartItems []struct {
-		Material models.Material
-		Area     float64
-		HeatLoss float64
-		Savings  float64
-	}
-
-	for _, item := range cart.Items {
-		material, _ := h.repo.GetMaterialByID(item.MaterialID)
-
-		// Статичные значения вместо расчётов
-		heatLoss := 1250.0       // Вт
-		monthlySavings := 2450.0 // руб./месяц
-
-		cartItems = append(cartItems, struct {
-			Material models.Material
-			Area     float64
-			HeatLoss float64
-			Savings  float64
-		}{
-			Material: material,
-			Area:     item.Area,
-			HeatLoss: heatLoss,
-			Savings:  monthlySavings,
+	router.GET("/test", func(c *gin.Context) {
+		c.HTML(200, "test.html", gin.H{
+			"Message": "Test page works!",
 		})
-	}
+	})
 
-	c.HTML(http.StatusOK, "cart.html", gin.H{
-		"Cart":      cart,
-		"CartItems": cartItems,
+	router.GET("/", h.IndexHandler)
+	router.GET("/material/:id", h.MaterialHandler)
+	router.GET("/application/:id", h.ApplicationHandler)
+	router.POST("/application/:id/delete", h.DeleteApplicationHandler)
+	router.POST("/material/:id/add", h.AddMaterialToApplicationHandler)
+}
+
+func (h *Handler) RegisterStatic(router *gin.Engine) {
+	router.LoadHTMLGlob("templates/*")
+	router.Static("/static", "./static")
+}
+
+func (h *Handler) errorHandler(ctx *gin.Context, errorStatusCode int, err error) {
+	logrus.Error(err.Error())
+	ctx.JSON(errorStatusCode, gin.H{
+		"status":      "error",
+		"description": err.Error(),
 	})
 }

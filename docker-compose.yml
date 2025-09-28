@@ -1,3 +1,4 @@
+# docker-compose.yml
 version: '3.8'
 
 services:
@@ -6,17 +7,53 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - minio
-      - postgres
+      postgres:
+        condition: service_healthy
+      minio:
+        condition: service_started
     environment:
+      - DB_HOST=postgres
+      - DB_NAME=MaterialBD
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASS=password
       - MINIO_ENDPOINT=minio:9000
       - MINIO_ACCESS_KEY=minioadmin
       - MINIO_SECRET_KEY=minioadmin
       - MINIO_BUCKET=images
-      - DATABASE_URL=postgresql://postgres:password@postgres:5432/insulation_db?sslmode=disable
+      - SERVICE_PORT=8080
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: MaterialBD
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5435:5432"
     volumes:
-      - ./templates:/app/templates
-      - ./resources:/app/resources
+      - postgres_data:/var/lib/postgresql/data
+      - ./build/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./build/fill.sql:/docker-entrypoint-initdb.d/fill.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d MaterialBD"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  adminer:
+    image: adminer:latest
+    ports:
+      - "8081:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
 
   minio:
     image: minio/minio
@@ -30,27 +67,11 @@ services:
     volumes:
       - minio_data:/data
 
-  postgres:
-    image: postgres:13
-    environment:
-      - POSTGRES_DB=insulation_db
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=password
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-
   configure-minio:
     image: minio/mc
     depends_on:
-      - minio
+      minio:
+        condition: service_started
     entrypoint: >
       /bin/sh -c "
       sleep 10;
@@ -62,5 +83,5 @@ services:
       "
 
 volumes:
-  minio_data:
   postgres_data:
+  minio_data:
