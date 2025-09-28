@@ -25,7 +25,7 @@ func StartServer() {
 
 	r.GET("/", handler.IndexHandler)
 	r.GET("/material/:id", handler.MaterialHandler)
-	r.GET("/cart", handler.CartHandler)
+	r.GET("/econom_materials/:id", handler.CartHandler)
 	//r.POST("/cart/add/:id", handler.AddToCartHandler)
 
 	r.Run()

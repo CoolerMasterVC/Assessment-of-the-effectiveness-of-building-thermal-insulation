@@ -23,46 +23,49 @@
         <div class="calculation-params">
             <div class="param-group">
                 <label for="indoor-temp">Температура помещения (°C):</label>
-                <input type="number" id="indoor-temp" name="indoor-temp" value="22" readonly>
+                <input type="number" id="indoor-temp" name="indoor-temp" value="{{.Cart.IndoorTemp}}" readonly>
             </div>
             <div class="param-group">
                 <label for="outdoor-temp">Температура внешняя (°C):</label>
-                <input type="number" id="outdoor-temp" name="outdoor-temp" value="-15" readonly>
+                <input type="number" id="outdoor-temp" name="outdoor-temp" value="{{.Cart.OutdoorTemp}}" readonly>
             </div>
             <div class="param-group">
                 <label for="total-area">Общая площадь утепления (м²):</label>
-                <input type="number" id="total-area" name="total-area" value="37.5" readonly>
+                <input type="number" id="total-area" name="total-area" value="{{.Cart.TotalArea}}" readonly>
             </div>
         </div>
         
         <div class="cart-items">
             {{ range .CartItems }}
-            <div class="cart-item">
-                <img src="{{.Material.ImageURL}}" alt="{{.Material.Name}}" class="cart-item-image">
-                <div class="cart-item-details">
-                    <h3>{{.Material.Name}}</h3>
-                    <div class="item-properties">
-                        <div class="property">
-                            <span class="label">Площадь:</span>
-                            <span class="value">{{.Area}} м²</span>
-                        </div>
-                        <div class="property">
-                            <span class="label">Цена:</span>
-                            <span class="value">{{.Material.PricePerM2}} руб./м²</span>
-                        </div>
-                        <div class="property">
-                            <span class="label">Коэф. теплопроводности:</span>
-                            <span class="value">{{.Material.Lambda}} Вт/(м·K)</span>
-                        </div>
-                        <br>
+            <div class="cart-item-container">
+                <div class="cart-item">
+                    <img src="{{.Material.ImageURL}}" alt="{{.Material.Name}}" class="cart-item-image">
+                    <div class="cart-item-details">
+                        <h3>{{.Material.Name}}</h3>
+                        <div class="item-properties">
                             <div class="property">
-                                <span class="label">Теплопотери:</span>
-                                <span class="value loss">{{printf "%.2f" .HeatLoss}} Вт</span>
+                                <span class="label">Площадь:</span>
+                                <span class="value">{{.Area}} м²</span>
                             </div>
-                        <div class="property">
-                            <span class="label">Экономия:</span>
-                            <span class="value savings">{{printf "%.2f" .Savings}} руб./месяц</span>
+                            <div class="property">
+                                <span class="label">Цена:</span>
+                                <span class="value">{{.Material.PricePerM2}} руб./м²</span>
+                            </div>
+                            <div class="property">
+                                <span class="label">Коэф. теплопроводности:</span>
+                                <span class="value">{{.Material.Lambda}} Вт/(м·K)</span>
+                            </div>
                         </div>
+                    </div>
+                </div>
+                <div class="cart-item-calculations">
+                    <div class="calculation-item">
+                        <span class="label">Теплопотери:</span>
+                        <span class="value loss">{{printf "%.2f" .HeatLoss}} Вт</span>
+                    </div>
+                    <div class="calculation-item">
+                        <span class="label">Экономия:</span>
+                        <span class="value savings">{{printf "%.2f" .Savings}} руб./месяц</span>
                     </div>
                 </div>
             </div>

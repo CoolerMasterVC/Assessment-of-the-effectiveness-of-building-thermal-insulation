@@ -81,47 +81,25 @@ func (r *Repository) GetMaterialsByName(name string) ([]models.Material, error) 
 	return result, nil
 }
 
-func (r *Repository) GetCart() (models.Cart, error) {
-	// Возвращаем корзину со статичными items для отображения счетчика
+func (r *Repository) GetCart(id int) (models.Cart, error) {
 	cart := models.Cart{
-		ID: 1,
+		ID:          id,
+		IndoorTemp:  22.0,
+		OutdoorTemp: -15.0,
 		Items: []models.CartItem{
 			{MaterialID: 1, Area: 15.5},
 			{MaterialID: 3, Area: 22.0},
 		},
 	}
 
-	// Расчет общей экономии для статичных данных
-	totalSavings := 0.0
-	staticItems := []struct {
-		MaterialID int
-		Area       float64
-	}{
-		{MaterialID: 1, Area: 15.5},
-		{MaterialID: 3, Area: 22.0},
+	totalArea := 0.0
+	for _, item := range cart.Items {
+		totalArea += item.Area
 	}
+	cart.TotalArea = totalArea
 
-	for _, staticItem := range staticItems {
-		material, _ := r.GetMaterialByID(staticItem.MaterialID)
-		monthlySavings := staticItem.Area * (0.1 / material.Lambda) * 24 * 30 * 0.5
-		totalSavings += monthlySavings
-	}
+	// Статичное значение вместо расчёта
+	cart.TotalSavings = 4900.0
 
-	cart.TotalSavings = totalSavings
 	return cart, nil
-}
-
-func (r *Repository) AddToCart(materialID int, area float64) error {
-	for i, item := range r.cart.Items {
-		if item.MaterialID == materialID {
-			r.cart.Items[i].Area += area
-			return nil
-		}
-	}
-
-	r.cart.Items = append(r.cart.Items, models.CartItem{
-		MaterialID: materialID,
-		Area:       area,
-	})
-	return nil
 }
