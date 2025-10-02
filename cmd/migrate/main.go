@@ -21,7 +21,7 @@ func main() {
 	err = db.AutoMigrate(
 		&ds.User{},
 		&ds.Material{},
-		&ds.Application{},
+		&ds.MaterialsApplication{},
 		&ds.ApplicationMaterial{},
 	)
 	if err != nil {

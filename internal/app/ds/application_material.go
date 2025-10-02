@@ -6,6 +6,6 @@ type ApplicationMaterial struct {
 	MaterialID    uint    `gorm:"primaryKey"`
 	Area          float64 `gorm:"not null"` // площадь данного материала
 
-	Application Application `gorm:"foreignKey:ApplicationID"`
-	Material    Material    `gorm:"foreignKey:MaterialID"`
+	Application MaterialsApplication `gorm:"foreignKey:ApplicationID"`
+	Material    Material             `gorm:"foreignKey:MaterialID"`
 }

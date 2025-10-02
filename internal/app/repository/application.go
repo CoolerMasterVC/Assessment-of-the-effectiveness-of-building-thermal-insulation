@@ -7,8 +7,8 @@ import (
 	"gorm.io/gorm"
 )
 
-func (r *Repository) GetUserDraft(userID uint) (*ds.Application, error) {
-	var application ds.Application
+func (r *Repository) GetUserDraft(userID uint) (*ds.MaterialsApplication, error) {
+	var application ds.MaterialsApplication
 	err := r.db.Where("creator_id = ? AND status = ?", userID, "черновик").First(&application).Error
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
@@ -19,8 +19,8 @@ func (r *Repository) GetUserDraft(userID uint) (*ds.Application, error) {
 	return &application, nil
 }
 
-func (r *Repository) CreateDraft(userID uint) (*ds.Application, error) {
-	application := ds.Application{
+func (r *Repository) CreateDraft(userID uint) (*ds.MaterialsApplication, error) {
+	application := ds.MaterialsApplication{
 		Status:      "черновик",
 		CreatorID:   userID,
 		TotalArea:   0,
@@ -60,8 +60,8 @@ func (r *Repository) AddMaterialToApplication(appID, materialID uint, area float
 	return r.RecalculateApplicationArea(appID)
 }
 
-func (r *Repository) GetApplicationByID(id uint) (*ds.Application, error) {
-	var application ds.Application
+func (r *Repository) GetApplicationByID(id uint) (*ds.MaterialsApplication, error) {
+	var application ds.MaterialsApplication
 	err := r.db.Where("id = ?", id).First(&application).Error
 	if err != nil {
 		return nil, err
@@ -82,7 +82,7 @@ func (r *Repository) GetApplicationMaterials(appID uint) ([]ds.ApplicationMateri
 }
 
 func (r *Repository) DeleteApplication(appID uint) error {
-	return r.db.Exec("UPDATE applications SET status = 'удалён' WHERE id = ?", appID).Error
+	return r.db.Exec("UPDATE materials_applications SET status = 'удалён' WHERE id = ?", appID).Error
 }
 
 func (r *Repository) GetApplicationMaterialsCount(appID uint) int64 {
@@ -92,12 +92,11 @@ func (r *Repository) GetApplicationMaterialsCount(appID uint) int64 {
 }
 
 func (r *Repository) UpdateApplicationArea(appID uint, area float64) error {
-	return r.db.Model(&ds.Application{}).
+	return r.db.Model(&ds.MaterialsApplication{}).
 		Where("id = ?", appID).
 		Update("total_area", area).Error
 }
 
-// internal/app/repository/application.go - ДОБАВИТЬ эту функцию
 func (r *Repository) RecalculateApplicationArea(appID uint) error {
 	var totalArea float64
 	err := r.db.Model(&ds.ApplicationMaterial{}).
@@ -108,7 +107,7 @@ func (r *Repository) RecalculateApplicationArea(appID uint) error {
 		return err
 	}
 
-	return r.db.Model(&ds.Application{}).
+	return r.db.Model(&ds.MaterialsApplication{}).
 		Where("id = ?", appID).
 		Update("total_area", totalArea).Error
 }

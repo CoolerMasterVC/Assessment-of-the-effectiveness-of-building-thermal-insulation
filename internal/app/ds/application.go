@@ -3,7 +3,7 @@ package ds
 
 import "time"
 
-type Application struct {
+type MaterialsApplication struct {
 	ID           uint       `gorm:"primaryKey"`
 	Status       string     `gorm:"default:'черновик';check:status IN ('черновик', 'удалён', 'сформирован', 'завершён', 'отклонён')"`
 	CreatorID    uint       `gorm:"not null"`

@@ -31,8 +31,8 @@ func (h *Handler) RegisterHandler(router *gin.Engine) {
 
 	router.GET("/", h.IndexHandler)
 	router.GET("/material/:id", h.MaterialHandler)
-	router.GET("/application/:id", h.ApplicationHandler)
-	router.POST("/application/:id/delete", h.DeleteApplicationHandler)
+	router.GET("/materials_aplication/:id", h.ApplicationHandler)
+	router.POST("/materials_aplication/:id/delete", h.DeleteApplicationHandler)
 	router.POST("/material/:id/add", h.AddMaterialToApplicationHandler)
 }
 

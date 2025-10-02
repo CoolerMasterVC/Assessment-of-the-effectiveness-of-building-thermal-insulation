@@ -46,14 +46,24 @@ func (h *Handler) ApplicationHandler(c *gin.Context) {
 	totalSavings := 0.0
 
 	for _, appMaterial := range appMaterials {
-		// Расчет теплопотерь и экономии (упрощенный)
-		heatLoss := appMaterial.Area * (application.IndoorTemp - application.OutdoorTemp) / (appMaterial.Material.Thickness / appMaterial.Material.Lambda)
-		savings := heatLoss * 0.1 * 24 * 30 // упрощенный расчет экономии
+		material := appMaterial.Material
+
+		deltaT := application.IndoorTemp - application.OutdoorTemp
+
+		// Теплопотери утепленной стены
+		insulatedHeatLoss := (appMaterial.Area * deltaT) / (material.Thickness / material.Lambda)
+
+		// Теплопотери базовой стены (кирпич)
+		baseHeatLoss := (appMaterial.Area * deltaT) / (0.5 / 0.7)
+
+		// Экономия энергии (кВт·ч/месяц)
+		energySavings := (baseHeatLoss - insulatedHeatLoss) * 24 * 30 / 1000
+		savings := energySavings * 5.0 // 5 руб/кВт·ч
 
 		cartItems = append(cartItems, CartItem{
-			Material: appMaterial.Material,
+			Material: material,
 			Area:     appMaterial.Area,
-			HeatLoss: heatLoss,
+			HeatLoss: insulatedHeatLoss,
 			Savings:  savings,
 		})
 		totalSavings += savings
@@ -72,7 +82,7 @@ func (h *Handler) ApplicationHandler(c *gin.Context) {
 		hasDraft = true
 	}
 
-	c.HTML(http.StatusOK, "application.html", gin.H{
+	c.HTML(http.StatusOK, "materials_aplication.html", gin.H{
 		"Application":  application,
 		"CartItems":    cartItems,
 		"TotalSavings": totalSavings,

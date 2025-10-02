@@ -23,7 +23,7 @@
                 <button type="submit">Найти</button>
             </form>
             {{if .HasDraft}}
-            <a href="/application/{{.CurrentApplication.ID}}" class="cart-icon">
+            <a href="/materials_aplication/{{.CurrentApplication.ID}}" class="cart-icon">
                 <img src="http://localhost:9000/images/cart.png" alt="Заявка" class="cart-material-image">
                 <span class="cart-count">{{ .CartCount }}</span>
             </a>
