@@ -51,8 +51,8 @@ CREATE TABLE IF NOT EXISTS application_materials (
 );
 
 -- Создание индексов для улучшения производительности
-CREATE INDEX IF NOT EXISTS idx_applications_creator_status ON applications(creator_id, status);
-CREATE INDEX IF NOT EXISTS idx_applications_status ON applications(status);
+CREATE INDEX IF NOT EXISTS idx_applications_creator_status ON materials_applications(creator_id, status);
+CREATE INDEX IF NOT EXISTS idx_applications_status ON materials_applications(status);
 CREATE INDEX IF NOT EXISTS idx_materials_status ON materials(status);
 CREATE INDEX IF NOT EXISTS idx_application_materials_app_id ON application_materials(application_id);
 CREATE INDEX IF NOT EXISTS idx_application_materials_mat_id ON application_materials(material_id);
