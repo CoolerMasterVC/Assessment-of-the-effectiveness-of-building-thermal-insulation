@@ -109,7 +109,7 @@ func (h *Handler) CartHandler(c *gin.Context) {
 		})
 	}
 
-	c.HTML(http.StatusOK, "cart.html", gin.H{
+	c.HTML(http.StatusOK, "materials_applications.html", gin.H{
 		"Cart":      cart,
 		"CartItems": cartItems,
 	})
