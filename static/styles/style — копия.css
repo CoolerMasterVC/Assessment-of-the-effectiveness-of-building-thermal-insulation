@@ -1,0 +1,324 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    color: #000000; /* Черный текст */
+    background-color: #f8f9fa;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+header {
+    background-color: #fdc300; /* Желтый/оранжевый вместо синего */
+    padding: 1rem 0;
+}
+
+header .container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.logo {
+    font-size: 1.5rem;
+    text-decoration: none;
+    color: #000000; /* Черный текст */
+    margin-right: 2rem;
+}
+
+.main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 2rem 0;
+    gap: 2rem;
+}
+
+.main-header h1 {
+    color: #000000; /* Черный вместо синего */
+    margin: 0;
+}
+
+.search-form {
+    display: flex;
+    gap: 0.5rem;
+    margin: 0;
+}
+
+.search-form input {
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.search-form button {
+    padding: 0.5rem 1rem;
+    background-color: #fdc300; /* Желтый/оранжевый */
+    color: #000000; /* Черный текст */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.cart-link {
+    color: #000000; /* Черный текст */
+    text-decoration: none;
+    font-weight: bold;
+    padding: 0.5rem 1rem;
+    border: 2px solid #fdc300; /* Желтый/оранжевый */
+    border-radius: 4px;
+    transition: all 0.3s;
+}
+
+.cart-link:hover {
+    background-color: #fdc300; /* Желтый/оранжевый */
+    color: #000000; /* Черный текст */
+}
+
+.materials-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.material-card {
+    background: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    cursor: pointer;
+    transition: transform 0.2s;
+    border: 1px solid #fdc300; /* Желтый/оранжевый акцент */
+}
+
+.material-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    border-color: #000000;
+}
+
+.material-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+}
+
+.material-info h3 {
+    color: #000000; /* Черный вместо синего */
+    margin-bottom: 0.5rem;
+}
+
+.price {
+    font-weight: bold;
+    color: #28a745;
+}
+
+.lambda {
+    color: #6c757d;
+}
+
+.material-detail {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.material-detail-image {
+    width: 100%;
+    max-height: 400px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.calculation-params {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    border: 1px solid #fdc300; /* Желтый/оранжевый акцент */
+}
+
+.param-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.param-group label {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    color: #000000; /* Черный текст */
+}
+
+.param-group input {
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #f8f9fa;
+    text-align: center;
+    color: #000000; /* Черный текст */
+}
+
+.cart-item-details {
+    flex: 1;
+}
+
+.item-properties {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.property {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem;
+    background-color: #fff9e6; /* Светло-желтый фон */
+    border-radius: 4px;
+    border-left: 3px solid #fdc300; /* Желтый/оранжевый акцент */
+}
+
+.property .label {
+    font-weight: 500;
+    color: #000000; /* Черный текст */
+}
+
+.property .value {
+    font-weight: bold;
+    color: #000000; /* Черный текст */
+}
+
+.property .loss {
+    color: #dc3545;
+}
+
+.property .savings {
+    color: #28a745;
+}
+
+.cart-item {
+    display: flex;
+    gap: 1.5rem;
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border: 1px solid #fdc300; /* Желтый/оранжевый акцент */
+}
+
+.cart-item-image {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.empty-cart {
+    text-align: center;
+    margin-top: 2rem;
+    padding: 2rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border: 1px solid #fdc300; /* Желтый/оранжевый акцент */
+}
+
+.empty-cart a {
+    color: #000000; /* Черный текст */
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.no-results {
+    text-align: center;
+    margin-top: 2rem;
+    padding: 2rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border: 1px solid #fdc300; /* Желтый/оранжевый акцент */
+}
+
+.add-to-cart-form {
+    margin-top: 1rem;
+}
+
+.add-to-cart-form input {
+    padding: 0.5rem;
+    margin-right: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    color: #000000; /* Черный текст */
+}
+
+.add-to-cart-form button {
+    padding: 0.5rem 1rem;
+    background-color: #fdc300; /* Желтый/оранжевый */
+    color: #000000; /* Черный текст */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+
+
+.cart-total {
+    margin-top: 2rem;
+    padding: 1rem;
+    background: #fdc300; /* Желтый/оранжевый */
+    color: #000000; /* Черный текст */
+    border-radius: 8px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.cart-icon {
+    position: relative;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.cart-material-image {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 2px solid #fdc300;
+}
+
+.cart-count {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background-color: #dc3545;
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: bold;
+}

@@ -1,0 +1,423 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    color: #000000;
+    background-color: #f8f9fa;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+header {
+    background-color: #fdc300;
+    padding: 1rem 0;
+}
+
+header .container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.logo-image {
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
+}
+
+.main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 2rem 0;
+    gap: 2rem;
+}
+
+.main-header h1 {
+    color: #000000;
+    margin: 0;
+}
+
+.search-form {
+    display: flex;
+    gap: 0.5rem;
+    margin: 0;
+}
+
+.search-form input {
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.search-form button {
+    padding: 0.5rem 1rem;
+    background-color: #fdc300;
+    color: #000000;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.cart-icon {
+    position: relative;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.cart-material-image {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 2px solid #fdc300;
+}
+
+.cart-count {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background-color: #dc3545;
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+/* Заголовки атрибутов для карточек материалов */
+.materials-header {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 1rem;
+    justify-items: center;
+}
+
+.attribute-headers {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 1.5rem;
+    font-weight: bold;
+    color: #000000;
+    margin-bottom: 0.5rem;
+}
+
+.materials-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 0.5rem;
+    justify-items: center;
+}
+
+.material-card {
+    background: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    cursor: pointer;
+    transition: transform 0.2s;
+    width: 300px;
+    height: 350px;
+    display: flex;
+    flex-direction: column;
+}
+
+.material-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    flex-shrink: 0;
+}
+
+.material-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.material-info h3 {
+    color: #000000;
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+    line-height: 1.3;
+}
+
+.material-attributes {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.price {
+    font-weight: bold;
+    color: #28a745;
+}
+
+.lambda {
+    color: #6c757d;
+}
+
+.material-detail {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.material-detail-image {
+    width: 100%;
+    max-height: 400px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+/* Поля заявки сверху вниз */
+.calculation-params {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    border: 1px solid #fdc300;
+    max-width: 400px;
+}
+
+.param-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.param-group label {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    color: #000000;
+}
+
+.param-group input {
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #f8f9fa;
+    text-align: center;
+    color: #000000;
+}
+
+.cart-item-details {
+    flex: 1;
+}
+
+.item-properties {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.property {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem;
+    background-color: #fff9e6;
+    border-radius: 4px;
+    border-left: 3px solid #fdc300;
+}
+
+.property .label {
+    font-weight: 500;
+    color: #000000;
+}
+
+.property .value {
+    font-weight: bold;
+    color: #000000;
+}
+
+.property .loss {
+    color: #dc3545;
+}
+
+.property .savings {
+    color: #28a745;
+}
+
+.cart-item {
+    display: flex;
+    gap: 1.5rem;
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border: 1px solid #fdc300;
+    flex: 1;
+}
+
+.cart-item-image {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.empty-cart {
+    text-align: center;
+    margin-top: 2rem;
+    padding: 2rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border: 1px solid #fdc300;
+}
+
+.empty-cart a {
+    color: #000000;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.no-results {
+    text-align: center;
+    margin-top: 2rem;
+    padding: 2rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border: 1px solid #fdc300;
+    grid-column: 1 / -1;
+}
+
+.add-to-cart-form {
+    margin-top: 1rem;
+}
+
+.add-to-cart-form input {
+    padding: 0.5rem;
+    margin-right: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    color: #000000;
+}
+
+.add-to-cart-form button {
+    padding: 0.5rem 1rem;
+    background-color: #fdc300;
+    color: #000000;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.cart-total {
+    margin-top: 2rem;
+    padding: 1rem;
+    background: #fdc300;
+    color: #000000;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.cart-item-container {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 1rem;
+}
+
+.cart-item-calculations {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    min-width: 200px;
+}
+
+.calculation-item {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    background-color: #fff9e6;
+    border-radius: 8px;
+    border: 2px solid #fdc300;
+    text-align: center;
+    min-width: 180px;
+}
+
+.calculation-item .label {
+    font-weight: 500;
+    color: #000000;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.calculation-item .value {
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.calculation-item .loss {
+    color: #dc3545;
+}
+
+.calculation-item .savings {
+    color: #28a745;
+}
+
+.application-actions {
+    text-align: center;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid #fdc300;
+}
+
+.delete-button {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.delete-button:hover {
+    background-color: #c82333;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.delete-button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
