@@ -92,9 +92,8 @@ func (h *Handler) CartHandler(c *gin.Context) {
 	for _, item := range cart.Items {
 		material, _ := h.repo.GetMaterialByID(item.MaterialID)
 
-		// Статичные значения вместо расчётов
-		heatLoss := 1250.0       // Вт
-		monthlySavings := 2450.0 // руб./месяц
+		heatLoss := 1250.0
+		monthlySavings := 2450.0
 
 		cartItems = append(cartItems, struct {
 			Material models.Material
