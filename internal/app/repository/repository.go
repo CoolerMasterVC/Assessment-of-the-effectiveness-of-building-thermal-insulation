@@ -8,7 +8,7 @@ import (
 
 type Repository struct {
 	materials []models.Material
-	cart      models.Cart
+	cart      models.ApplicationMaterials
 }
 
 func NewRepository() (*Repository, error) {
@@ -47,9 +47,9 @@ func NewRepository() (*Repository, error) {
 		},
 	}
 
-	cart := models.Cart{
+	cart := models.ApplicationMaterials{
 		ID:    1,
-		Items: []models.CartItem{},
+		Items: []models.CartMaterial{},
 	}
 
 	return &Repository{
@@ -81,12 +81,12 @@ func (r *Repository) GetMaterialsByName(name string) ([]models.Material, error) 
 	return result, nil
 }
 
-func (r *Repository) GetCart(id int) (models.Cart, error) {
-	cart := models.Cart{
+func (r *Repository) GetCart(id int) (models.ApplicationMaterials, error) {
+	cart := models.ApplicationMaterials{
 		ID:          id,
 		IndoorTemp:  22.0,
 		OutdoorTemp: -15.0,
-		Items: []models.CartItem{
+		Items: []models.CartMaterial{
 			{MaterialID: 1, Area: 15.5},
 			{MaterialID: 3, Area: 22.0},
 		},
