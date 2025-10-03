@@ -68,7 +68,7 @@ func (h *Handler) MaterialHandler(c *gin.Context) {
 	})
 }
 
-func (h *Handler) CartHandler(c *gin.Context) {
+func (h *Handler) CartMaterialHandler(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
