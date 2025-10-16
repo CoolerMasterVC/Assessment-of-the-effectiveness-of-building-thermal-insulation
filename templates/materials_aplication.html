@@ -35,39 +35,29 @@
             </div>
         </div>
         
-        <div class="cart-items">
+        <!-- ЗАГОЛОВКИ ТАБЛИЦЫ -->
+        <div class="application-headers">
+            <div class="header-item image-header">Изображение</div>
+            <div class="header-item name-header">Название</div>
+            <div class="header-item area-header">Площадь, м²</div>
+            <div class="header-item price-header">Цена, руб./м²</div>
+            <div class="header-item lambda-header">Коэф. теплопроводности, Вт/(м·K)</div>
+            <div class="header-item heatloss-header">Теплопотери, Вт</div>
+            <div class="header-item savings-header">Экономия, руб./месяц</div>
+        </div>
+        
+        <div class="application-items">
             {{ range .CartItems }}
-            <div class="cart-item-container">
-                <div class="cart-item">
-                    <img src="{{.Material.ImageURL}}" alt="{{.Material.Name}}" class="cart-item-image">
-                    <div class="cart-item-details">
-                        <h3>{{.Material.Name}}</h3>
-                        <div class="item-properties">
-                            <div class="property">
-                                <span class="label">Площадь:</span>
-                                <span class="value">{{.Area}} м²</span>
-                            </div>
-                            <div class="property">
-                                <span class="label">Цена:</span>
-                                <span class="value">{{.Material.PricePerM2}} руб./м²</span>
-                            </div>
-                            <div class="property">
-                                <span class="label">Коэф. теплопроводности:</span>
-                                <span class="value">{{.Material.Lambda}} Вт/(м·K)</span>
-                            </div>
-                        </div>
-                    </div>
+            <div class="application-item">
+                <div class="item-image">
+                    <img src="{{.Material.ImageURL}}" alt="{{.Material.Name}}">
                 </div>
-                <div class="cart-item-calculations">
-                    <div class="calculation-item">
-                        <span class="label">Теплопотери:</span>
-                        <span class="value loss">{{printf "%.2f" .HeatLoss}} Вт</span>
-                    </div>
-                    <div class="calculation-item">
-                        <span class="label">Экономия:</span>
-                        <span class="value savings">{{printf "%.2f" .Savings}} руб./месяц</span>
-                    </div>
-                </div>
+                <div class="item-name">{{.Material.Name}}</div>
+                <div class="item-area">{{.Area}}</div>
+                <div class="item-price">{{.Material.PricePerM2}}</div>
+                <div class="item-lambda">{{.Material.Lambda}}</div>
+                <div class="item-heatloss">{{printf "%.2f" .HeatLoss}}</div>
+                <div class="item-savings">{{printf "%.2f" .Savings}}</div>
             </div>
             {{ end }}
         </div>
@@ -84,12 +74,11 @@
             <a href="/">Выбрать материалы</a>
         </div>
         {{ else }}
-<div class="application-actions">
-    <form method="POST" action="/materials_aplication/{{.Application.ID}}/delete" 
-          onsubmit="return confirm('Вы уверены, что хотите удалить эту заявку?')">
-        <button type="submit" class="delete-button">Удалить заявку</button>
-    </form>
-</div>
+        <div class="application-actions">
+            <form method="POST" action="/materials_aplication/{{.Application.ID}}/delete">
+                <button type="submit" class="delete-button">Удалить заявку</button>
+            </form>
+        </div>
         {{ end }}
     </main>
 </body>

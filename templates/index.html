@@ -35,14 +35,28 @@
             {{end}}
         </div>
         
+        <!-- ЗАГОЛОВКИ АТРИБУТОВ -->
+        <div class="attribute-headers">
+            <span>Название</span>
+            <span>Цена, руб./м²</span>
+            <span>λ, Вт/(м·K)</span>
+        </div>
+        
         <div class="materials-grid">
             {{ range .Materials }}
-            <div class="material-card" onclick="window.location.href='/material/{{.ID}}'">
+            <div class="material-card">
                 <img src="{{.ImageURL}}" alt="{{.Name}}" class="material-image">
                 <div class="material-info">
                     <h3>{{.Name}}</h3>
-                    <p class="price">{{.PricePerM2}} руб./м²</p>
-                    <p class="lambda">λ: {{.Lambda}} Вт/(м·K)</p>
+                    <div class="material-attributes">
+                        <span class="price">{{.PricePerM2}}</span>
+                        <span class="lambda">{{.Lambda}}</span>
+                    </div>
+                    <!-- КНОПКА ДОБАВЛЕНИЯ НА ГЛАВНОЙ -->
+                    <form method="POST" action="/material/{{.ID}}/add" class="add-to-cart-form">
+                        <input type="number" name="area" placeholder="Площадь (м²)" step="0.1" min="0.1" value="10" required>
+                        <button type="submit">Добавить в заявку</button>
+                    </form>
                 </div>
             </div>
             {{ end }}

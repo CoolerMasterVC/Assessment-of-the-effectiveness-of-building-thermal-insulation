@@ -140,7 +140,7 @@ header .container {
     cursor: pointer;
     transition: transform 0.2s;
     width: 300px;
-    height: 350px;
+    height: 400px;
     display: flex;
     flex-direction: column;
 }
@@ -231,17 +231,6 @@ header .container {
     color: #000000;
 }
 
-.cart-item-details {
-    flex: 1;
-}
-
-.item-properties {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 0.5rem;
-    margin-top: 1rem;
-}
-
 .property {
     display: flex;
     justify-content: space-between;
@@ -269,16 +258,7 @@ header .container {
     color: #28a745;
 }
 
-.cart-item {
-    display: flex;
-    gap: 1.5rem;
-    background: white;
-    padding: 1.5rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    border: 1px solid #fdc300;
-    flex: 1;
-}
+
 
 .cart-item-image {
     width: 150px;
@@ -346,51 +326,6 @@ header .container {
     font-weight: bold;
 }
 
-.cart-item-container {
-    display: flex;
-    align-items: center;
-    gap: 2rem;
-    margin-bottom: 1rem;
-}
-
-.cart-item-calculations {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    min-width: 200px;
-}
-
-.calculation-item {
-    display: flex;
-    flex-direction: column;
-    padding: 1rem;
-    background-color: #fff9e6;
-    border-radius: 8px;
-    border: 2px solid #fdc300;
-    text-align: center;
-    min-width: 180px;
-}
-
-.calculation-item .label {
-    font-weight: 500;
-    color: #000000;
-    margin-bottom: 0.5rem;
-    font-size: 0.9rem;
-}
-
-.calculation-item .value {
-    font-weight: bold;
-    font-size: 1.1rem;
-}
-
-.calculation-item .loss {
-    color: #dc3545;
-}
-
-.calculation-item .savings {
-    color: #28a745;
-}
-
 .application-actions {
     text-align: center;
     margin-top: 2rem;
@@ -420,4 +355,123 @@ header .container {
 .delete-button:active {
     transform: translateY(0);
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.material-card .add-to-cart-form {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.material-card .add-to-cart-form input {
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    text-align: center;
+    color: #000000;
+}
+
+.material-card .add-to-cart-form button {
+    padding: 0.5rem;
+    background-color: #fdc300;
+    color: #000000;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+.application-headers {
+    display: grid;
+    grid-template-columns: 100px 1fr 80px 100px 150px 120px 140px;
+    gap: 1rem;
+    padding: 1rem;
+    background-color: #fdc300;
+    border-radius: 8px 8px 0 0;
+    font-weight: bold;
+    color: #000000;
+    margin-top: 2rem;
+    align-items: center;
+}
+
+.application-headers .header-item {
+    text-align: center;
+    padding: 0.5rem;
+}
+
+.application-headers .name-header {
+    text-align: left;
+}
+
+.application-items {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.application-item {
+    display: grid;
+    grid-template-columns: 100px 1fr 80px 100px 150px 120px 140px;
+    gap: 1rem;
+    padding: 1rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border: 1px solid #fdc300;
+    align-items: center;
+}
+
+.application-item > div {
+    padding: 0.5rem;
+}
+
+.application-item .item-image {
+    text-align: center;
+}
+
+.application-item .item-image img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.application-item .item-name {
+    font-weight: 500;
+    text-align: left;
+}
+
+.application-item .item-area,
+.application-item .item-price,
+.application-item .item-lambda,
+.application-item .item-heatloss,
+.application-item .item-savings {
+    font-weight: bold;
+    text-align: center;
+}
+
+.application-item .item-heatloss {
+    color: #dc3545;
+}
+
+.application-item .item-savings {
+    color: #28a745;
+}
+
+/* Адаптивность для мобильных устройств */
+@media (max-width: 1200px) {
+    .application-headers,
+    .application-item {
+        grid-template-columns: 80px 1fr 70px 90px 130px 110px 130px;
+        gap: 0.5rem;
+        font-size: 0.9rem;
+    }
+    
+    .application-headers .header-item,
+    .application-item > div {
+        word-break: break-word;
+    }
 }
