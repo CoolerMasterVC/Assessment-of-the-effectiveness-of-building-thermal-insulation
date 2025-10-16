@@ -24,10 +24,6 @@
                 <p class="lambda">Коэффициент теплопроводности: {{.Material.Lambda}} Вт/(м·K)</p>
                 <p class="description">{{.Material.Description}}</p>
                 
-                <form method="POST" action="/material/{{.Material.ID}}/add" class="add-to-cart-form">
-                    <input type="number" name="area" placeholder="Площадь (м²)" step="0.1" min="0.1" required>
-                    <button type="submit">Добавить в заявку</button>
-                </form>
             </div>
         </div>
     </main>
