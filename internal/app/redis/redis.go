@@ -1,56 +1,50 @@
-// internal/app/redis/redis.go
 package redis
 
 import (
-	"encoding/json"
+	"context"
+	"fmt"
 	"time"
 
 	"github.com/go-redis/redis/v8"
-	"golang.org/x/net/context"
 )
 
 type Client struct {
 	client *redis.Client
 }
 
-func NewRedisClient(addr, password string, db int) *Client {
-	return &Client{
-		client: redis.NewClient(&redis.Options{
-			Addr:     addr,
-			Password: password,
-			DB:       db,
-		}),
-	}
-}
+func New(host string, port int) (*Client, error) {
+	rdb := redis.NewClient(&redis.Options{
+		Addr:     fmt.Sprintf("%s:%d", host, port),
+		Password: "", // no password set
+		DB:       0,  // use default DB
+	})
 
-func (r *Client) SetSession(ctx context.Context, sessionID string, userID uint, expiration time.Duration) error {
-	sessionData := map[string]interface{}{
-		"user_id": userID,
-		"created": time.Now(),
-	}
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
 
-	data, err := json.Marshal(sessionData)
+	_, err := rdb.Ping(ctx).Result()
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return r.client.Set(ctx, "session:"+sessionID, data, expiration).Err()
+	return &Client{client: rdb}, nil
 }
 
-func (r *Client) GetSession(ctx context.Context, sessionID string) (uint, error) {
-	data, err := r.client.Get(ctx, "session:"+sessionID).Result()
+func (c *Client) SetJWTBlacklist(ctx context.Context, token string, expiration time.Duration) error {
+	return c.client.Set(ctx, "blacklist:"+token, "1", expiration).Err()
+}
+
+func (c *Client) IsJWTBlacklisted(ctx context.Context, token string) (bool, error) {
+	val, err := c.client.Get(ctx, "blacklist:"+token).Result()
+	if err == redis.Nil {
+		return false, nil
+	}
 	if err != nil {
-		return 0, err
+		return false, err
 	}
-
-	var sessionData map[string]interface{}
-	if err := json.Unmarshal([]byte(data), &sessionData); err != nil {
-		return 0, err
-	}
-
-	return uint(sessionData["user_id"].(float64)), nil
+	return val == "1", nil
 }
 
-func (r *Client) DeleteSession(ctx context.Context, sessionID string) error {
-	return r.client.Del(ctx, "session:"+sessionID).Err()
+func (c *Client) Close() error {
+	return c.client.Close()
 }

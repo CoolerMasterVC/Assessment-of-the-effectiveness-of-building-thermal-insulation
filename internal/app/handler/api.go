@@ -18,7 +18,7 @@ func (h *Handler) RegisterAPI(router *gin.Engine) {
 	}
 
 	// Application routes
-	applications := api.Group("/applications")
+	applications := api.Group("/mat_applics")
 	{
 		applications.GET("/cart", h.GetCartInfo)
 		applications.GET("", h.GetApplications)

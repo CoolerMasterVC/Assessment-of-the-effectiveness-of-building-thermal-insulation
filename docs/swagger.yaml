@@ -1,0 +1,329 @@
+basePath: /
+definitions:
+  ds.ApplicationMaterial:
+    properties:
+      area:
+        type: number
+      created_at:
+        type: string
+      material:
+        $ref: '#/definitions/ds.Material'
+      material_id:
+        type: integer
+    type: object
+  ds.Material:
+    properties:
+      created_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      image_url:
+        type: string
+      lambda:
+        type: number
+      name:
+        type: string
+      price_per_m2:
+        type: number
+      status:
+        type: string
+      thickness:
+        type: number
+    type: object
+  ds.MaterialsApplication:
+    properties:
+      completed_at:
+        type: string
+      created_at:
+        type: string
+      creator:
+        $ref: '#/definitions/ds.User'
+      creator_id:
+        type: integer
+      id:
+        type: integer
+      indoor_temp:
+        type: number
+      materials:
+        items:
+          $ref: '#/definitions/ds.ApplicationMaterial'
+        type: array
+      moderator:
+        $ref: '#/definitions/ds.User'
+      moderator_id:
+        type: integer
+      outdoor_temp:
+        type: number
+      status:
+        type: string
+      submitted_at:
+        type: string
+      total_area:
+        type: number
+      total_savings:
+        type: number
+    type: object
+  ds.User:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      is_moderator:
+        type: boolean
+      login:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: support@materials-app.com
+    name: API Support
+    url: http://localhost:8080
+  description: API for heat insulation materials and applications
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  title: Materials App API
+  version: "1.0"
+paths:
+  /api/applications:
+    get:
+      consumes:
+      - application/json
+      description: Get applications with filtering. For moderators - all applications,
+        for users - only their applications
+      parameters:
+      - description: Status filter
+        in: query
+        name: status
+        type: string
+      - description: Start date (YYYY-MM-DD)
+        in: query
+        name: start_date
+        type: string
+      - description: End date (YYYY-MM-DD)
+        in: query
+        name: end_date
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/ds.MaterialsApplication'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get applications list
+      tags:
+      - Applications
+  /api/applications/{id}/complete:
+    put:
+      consumes:
+      - application/json
+      description: Complete application (moderator only)
+      parameters:
+      - description: Application ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Application completed
+          schema:
+            type: object
+        "400":
+          description: Bad request
+          schema:
+            type: object
+        "403":
+          description: Forbidden
+          schema:
+            type: object
+        "404":
+          description: Not found
+          schema:
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Complete application
+      tags:
+      - Applications
+  /api/applications/{id}/reject:
+    put:
+      consumes:
+      - application/json
+      description: Reject application (moderator only)
+      parameters:
+      - description: Application ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Application rejected
+          schema:
+            type: object
+        "400":
+          description: Bad request
+          schema:
+            type: object
+        "403":
+          description: Forbidden
+          schema:
+            type: object
+        "404":
+          description: Not found
+          schema:
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Reject application
+      tags:
+      - Applications
+  /api/applications/cart:
+    get:
+      description: Get current user's draft application info
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Cart information
+          schema:
+            type: object
+      summary: Get cart info
+      tags:
+      - Applications
+  /api/users/login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticate user and return JWT token
+      parameters:
+      - description: Login credentials
+        in: body
+        name: input
+        required: true
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Login successful
+          schema:
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            type: object
+      summary: User login
+      tags:
+      - Users
+  /api/users/logout:
+    post:
+      consumes:
+      - application/json
+      description: Logout user and invalidate token
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Logout successful
+          schema:
+            type: object
+      security:
+      - BearerAuth: []
+      summary: User logout
+      tags:
+      - Users
+  /api/users/me:
+    get:
+      description: Get current user profile information
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User profile
+          schema:
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get current user
+      tags:
+      - Users
+    put:
+      consumes:
+      - application/json
+      description: Update current user profile information
+      parameters:
+      - description: Profile update data
+        in: body
+        name: input
+        required: true
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Profile updated
+          schema:
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Update current user
+      tags:
+      - Users
+  /api/users/register:
+    post:
+      consumes:
+      - application/json
+      description: Register a new user
+      parameters:
+      - description: User registration data
+        in: body
+        name: input
+        required: true
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: User created
+          schema:
+            type: object
+        "400":
+          description: Bad request
+          schema:
+            type: object
+      summary: User registration
+      tags:
+      - Users
+securityDefinitions:
+  BearerAuth:
+    description: JWT Authorization header using the Bearer scheme
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

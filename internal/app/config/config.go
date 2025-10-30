@@ -9,8 +9,12 @@ import (
 )
 
 type Config struct {
-	ServiceHost string
-	ServicePort int
+	ServiceHost     string
+	ServicePort     int
+	JWTSecret       string
+	JWTExpiresHours int
+	RedisHost       string
+	RedisPort       int
 }
 
 func NewConfig() (*Config, error) {
@@ -33,9 +37,8 @@ func NewConfig() (*Config, error) {
 		return nil, err
 	}
 
-	cfg := &Config{}           // создаем объект конфига
-	err = viper.Unmarshal(cfg) // читаем информацию из файла,
-	// конвертируем и затем кладем в нашу переменную cfg
+	cfg := &Config{}
+	err = viper.Unmarshal(cfg)
 	if err != nil {
 		return nil, err
 	}

@@ -99,7 +99,7 @@ func (r *Repository) CreateDraft(userID uint) (*ds.MaterialsApplication, error) 
 func (r *Repository) GetApplications(status string, startDate, endDate *time.Time) ([]ds.MaterialsApplication, error) {
 	var applications []ds.MaterialsApplication
 	query := r.db.Preload("Creator").Preload("Moderator").
-		Where("status != ? AND status != ?", "удалён", "черновик")
+		Where("status != ?", "удалён") // Только не удаленные заявки
 
 	if status != "" {
 		query = query.Where("status = ?", status)
@@ -263,11 +263,44 @@ func (r *Repository) CreateUser(user *ds.User) error {
 func (r *Repository) GetUserByLogin(login string) (*ds.User, error) {
 	var user ds.User
 	err := r.db.Where("login = ?", login).First(&user).Error
-	return &user, err
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, nil // Пользователь не найден - это нормально
+		}
+		return nil, err // Другая ошибка БД
+	}
+	return &user, nil
 }
 
 func (r *Repository) UpdateUser(id uint, user *ds.User) error {
 	return r.db.Model(&ds.User{}).Where("id = ?", id).Updates(map[string]interface{}{
 		"login": user.Login,
 	}).Error
+}
+
+func (r *Repository) GetUserApplications(userID uint, status string, startDate, endDate *time.Time) ([]ds.MaterialsApplication, error) {
+	var applications []ds.MaterialsApplication
+	query := r.db.Preload("Creator").Preload("Moderator").
+		Where("creator_id = ? AND status != ?", userID, "удалён") // Только не удаленные заявки пользователя
+
+	if status != "" {
+		query = query.Where("status = ?", status)
+	}
+
+	if startDate != nil {
+		query = query.Where("created_at >= ?", startDate)
+	}
+
+	if endDate != nil {
+		query = query.Where("created_at <= ?", endDate)
+	}
+
+	err := query.Find(&applications).Error
+	return applications, err
+}
+
+func (r *Repository) GetUserByID(id uint) (*ds.User, error) {
+	var user ds.User
+	err := r.db.Where("id = ?", id).First(&user).Error
+	return &user, err
 }
