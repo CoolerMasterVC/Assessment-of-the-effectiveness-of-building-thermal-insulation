@@ -1,4 +1,3 @@
-// internal/pkg/app.go
 package pkg
 
 import (
@@ -28,8 +27,11 @@ func NewApp(c *config.Config, r *gin.Engine, h *handler.Handler) *Application {
 func (a *Application) RunApp() {
 	logrus.Info("Server start up")
 
+	// Сначала загружаем шаблоны
+	a.Handler.RegisterTemplates(a.Router)
+
+	// Затем регистрируем все handlers
 	a.Handler.RegisterHandler(a.Router)
-	a.Handler.RegisterStatic(a.Router)
 
 	serverAddress := fmt.Sprintf("%s:%d", a.Config.ServiceHost, a.Config.ServicePort)
 	if err := a.Router.Run(serverAddress); err != nil {
