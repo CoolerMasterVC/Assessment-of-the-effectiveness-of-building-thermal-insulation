@@ -1,0 +1,41 @@
+package pkg
+
+import (
+	"fmt"
+
+	"Lab1/internal/app/config"
+	"Lab1/internal/app/handler"
+
+	"github.com/gin-gonic/gin"
+	"github.com/sirupsen/logrus"
+)
+
+type Application struct {
+	Config  *config.Config
+	Router  *gin.Engine
+	Handler *handler.Handler
+}
+
+func NewApp(c *config.Config, r *gin.Engine, h *handler.Handler) *Application {
+	return &Application{
+		Config:  c,
+		Router:  r,
+		Handler: h,
+	}
+}
+
+func (a *Application) RunApp() {
+	logrus.Info("Server start up")
+
+	// Сначала загружаем шаблоны
+	a.Handler.RegisterTemplates(a.Router)
+
+	// Затем регистрируем все handlers
+	a.Handler.RegisterHandler(a.Router)
+
+	serverAddress := fmt.Sprintf("%s:%d", a.Config.ServiceHost, a.Config.ServicePort)
+	if err := a.Router.Run(serverAddress); err != nil {
+		logrus.Fatal(err)
+	}
+	logrus.Info("Server down")
+}
