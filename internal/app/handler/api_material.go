@@ -5,6 +5,7 @@ import (
 	"Lab1/internal/app/ds"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -94,7 +95,6 @@ func (h *Handler) DeleteMaterial(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"status": "deleted"})
 }
 
-// POST /api/materials/:id/image
 func (h *Handler) UploadMaterialImage(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -102,21 +102,20 @@ func (h *Handler) UploadMaterialImage(c *gin.Context) {
 		return
 	}
 
-	file, err := c.FormFile("image")
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "No image file"})
+	// Получаем URL из формы
+	imageURL := c.PostForm("image_url")
+	if imageURL == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "No image URL provided"})
 		return
 	}
 
-	// УДАЛЯЕМ Minio - используем существующее хранилище
-	// Просто сохраняем файл в существующую систему
-	dst := "static/images/" + file.Filename
-	if err := c.SaveUploadedFile(file, dst); err != nil {
-		h.errorHandler(c, http.StatusInternalServerError, err)
+	// Простая проверка что это похоже на URL
+	if len(imageURL) < 10 || (!strings.HasPrefix(imageURL, "http://") && !strings.HasPrefix(imageURL, "https://")) {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid URL format. Must start with http:// or https://"})
 		return
 	}
 
-	imageURL := "/static/images/" + file.Filename
+	// Сохраняем URL в базу данных
 	if err := h.Repository.UpdateMaterialImage(uint(id), imageURL); err != nil {
 		h.errorHandler(c, http.StatusInternalServerError, err)
 		return
