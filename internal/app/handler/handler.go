@@ -10,13 +10,15 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
+	"github.com/minio/minio-go/v7"
 	"github.com/sirupsen/logrus"
 )
 
 type Handler struct {
-	Repository *repository.Repository
-	Config     *config.Config
-	Redis      *redis.Client
+	Repository  *repository.Repository
+	Config      *config.Config
+	MinioClient *minio.Client
+	Redis       *redis.Client
 }
 
 func NewHandler(r *repository.Repository, cfg *config.Config, redisClient *redis.Client) *Handler {

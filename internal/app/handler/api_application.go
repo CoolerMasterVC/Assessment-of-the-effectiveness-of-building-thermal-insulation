@@ -53,10 +53,8 @@ func (h *Handler) GetApplications(c *gin.Context) {
 	var err error
 
 	if user.IsModerator {
-		// Модератор - все заявки кроме удаленных
 		applications, err = h.Repository.GetApplications(status, startDate, endDate)
 	} else {
-		// Обычный пользователь - только свои заявки кроме удаленных
 		applications, err = h.Repository.GetUserApplications(user.ID, status, startDate, endDate)
 	}
 
@@ -65,7 +63,22 @@ func (h *Handler) GetApplications(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, applications)
+	// ДОБАВЛЯЕМ: Получаем количество материалов для каждой заявки
+	type ApplicationWithCount struct {
+		ds.MaterialsApplication
+		MaterialsCount int64 `json:"materials_count"`
+	}
+
+	result := make([]ApplicationWithCount, len(applications))
+	for i, app := range applications {
+		count := h.Repository.GetApplicationMaterialsCount(app.ID)
+		result[i] = ApplicationWithCount{
+			MaterialsApplication: app,
+			MaterialsCount:       count,
+		}
+	}
+
+	c.JSON(http.StatusOK, result)
 }
 
 // CompleteApplication завершает заявку (только для модераторов)
@@ -81,6 +94,7 @@ func (h *Handler) GetApplications(c *gin.Context) {
 // @Failure 403 {object} object "Forbidden"
 // @Failure 404 {object} object "Not found"
 // @Router /api/applications/{id}/complete [put]
+// PUT /api/mat_applics/:id/complete
 func (h *Handler) CompleteApplication(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -99,21 +113,24 @@ func (h *Handler) CompleteApplication(c *gin.Context) {
 		return
 	}
 
-	// Рассчитываем экономию
+	// Получаем заявку с материалами
 	application, err := h.Repository.GetApplicationByID(uint(id))
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Application not found"})
 		return
 	}
 
+	// Получаем материалы заявки
 	appMaterials, err := h.Repository.GetApplicationMaterials(uint(id))
 	if err != nil {
 		h.errorHandler(c, http.StatusInternalServerError, err)
 		return
 	}
 
+	// РАСЧЕТ ЭКОНОМИИ
 	totalSavings := calculations.CalculateTotalSavings(application, appMaterials)
 
+	// Сохраняем результат в БД
 	if err := h.Repository.CompleteApplication(uint(id), user.ID, totalSavings); err != nil {
 		h.errorHandler(c, http.StatusInternalServerError, err)
 		return
