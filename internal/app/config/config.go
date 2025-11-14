@@ -15,6 +15,16 @@ type Config struct {
 	JWTExpiresHours int
 	RedisHost       string
 	RedisPort       int
+
+	MinioExternalEndpoint string
+
+	// Minio настройки
+	MinioEndpoint   string `yaml:"minio_endpoint" env:"MINIO_ENDPOINT" env-default:"localhost:9000"`
+	MinioAccessKey  string `yaml:"minio_access_key" env:"MINIO_ACCESS_KEY" env-default:"minioadmin"`
+	MinioSecretKey  string `yaml:"minio_secret_key" env:"MINIO_SECRET_KEY" env-default:"minioadmin"`
+	MinioBucketName string `yaml:"minio_bucket_name" env:"MINIO_BUCKET_NAME" env-default:"images"`
+	MinioUseSSL     bool   `yaml:"minio_use_ssl" env:"MINIO_USE_SSL" env-default:"false"`
+	MinioRegion     string `yaml:"minio_region" env:"MINIO_REGION" env-default:"us-east-1"`
 }
 
 func NewConfig() (*Config, error) {

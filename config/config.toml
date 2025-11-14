@@ -4,3 +4,14 @@ JWTSecret = "super_secret_jwt_key_materials"
 JWTExpiresHours = 24
 RedisHost = "redis"
 RedisPort = 6379
+RedisPassword = ""
+RedisDB = 0
+
+# Minio настройки
+MinioEndpoint = "localhost:9000"
+MinioAccessKey = "minioadmin"
+MinioSecretKey = "minioadmin"
+MinioBucketName = "images"
+MinioUseSSL = false
+MinioRegion = "us-east-1"
+MinioExternalEndpoint = "localhost:9000"

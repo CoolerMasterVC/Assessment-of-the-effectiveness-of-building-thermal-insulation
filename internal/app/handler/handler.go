@@ -21,11 +21,12 @@ type Handler struct {
 	Redis       *redis.Client
 }
 
-func NewHandler(r *repository.Repository, cfg *config.Config, redisClient *redis.Client) *Handler {
+func NewHandler(r *repository.Repository, cfg *config.Config, redisClient *redis.Client, minioClient *minio.Client) *Handler {
 	return &Handler{
-		Repository: r,
-		Config:     cfg,
-		Redis:      redisClient,
+		Repository:  r,
+		Config:      cfg,
+		Redis:       redisClient,
+		MinioClient: minioClient, // Добавьте эту строку
 	}
 }
 
@@ -71,7 +72,7 @@ func (h *Handler) RegisterHandler(router *gin.Engine) {
 		public.GET("/materials", h.GetMaterials)
 		public.GET("/materials/:id", h.GetMaterial)
 		// Корзина (доступна всем, но для гостя возвращает 0,0)
-		public.GET("/applications/cart", h.GetCartInfo)
+		public.GET("/mat_applics/cart", h.GetCartInfo)
 	}
 
 	// Защищенные маршруты (требуют аутентификации)
@@ -87,7 +88,7 @@ func (h *Handler) RegisterHandler(router *gin.Engine) {
 		}
 
 		// Маршруты заявок (для всех аутентифицированных)
-		applications := protected.Group("/applications")
+		applications := protected.Group("/mat_applics")
 		{
 			applications.GET("", h.GetApplications)
 			applications.GET("/:id", h.GetApplication)
@@ -116,8 +117,8 @@ func (h *Handler) RegisterHandler(router *gin.Engine) {
 		moderator := protected.Group("")
 		moderator.Use(h.RequireModerator())
 		{
-			moderator.PUT("/applications/:id/complete", h.CompleteApplication)
-			moderator.PUT("/applications/:id/reject", h.RejectApplication)
+			moderator.PUT("/mat_applics/:id/complete", h.CompleteApplication)
+			moderator.PUT("/mat_applics/:id/reject", h.RejectApplication)
 		}
 	}
 

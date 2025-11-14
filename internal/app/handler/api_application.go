@@ -194,6 +194,11 @@ func (h *Handler) GetCartInfo(c *gin.Context) {
 	var application *ds.MaterialsApplication
 	var count int64 = 0
 
+	if user == nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "authentication required"})
+		return
+	}
+
 	if user != nil {
 		application, _ = h.Repository.GetUserDraft(user.ID)
 		if application != nil {

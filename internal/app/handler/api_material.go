@@ -102,14 +102,16 @@ func (h *Handler) UploadMaterialImage(c *gin.Context) {
 		return
 	}
 
-	file, err := c.FormFile("image")
+	// ИСПРАВЛЕННЫЙ ПОДХОД - как в рабочем коде
+	file, header, err := c.Request.FormFile("image")
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "No image file"})
 		return
 	}
+	defer file.Close()
 
 	// Проверяем что это изображение
-	if !strings.HasPrefix(file.Header.Get("Content-Type"), "image/") {
+	if !strings.Contains(header.Header.Get("Content-Type"), "image/") {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "File is not an image"})
 		return
 	}
@@ -120,10 +122,10 @@ func (h *Handler) UploadMaterialImage(c *gin.Context) {
 	}
 
 	// Генерируем название на латинице
-	fileName := h.generateImageFileName(file.Filename, uint(id))
+	fileName := h.generateImageFileName(header.Filename, uint(id))
 
-	// Загружаем в Minio
-	imageURL, err := h.uploadImageToMinio(file, fileName)
+	// Загружаем в Minio - передаем file, fileName и fileSize
+	imageURL, err := h.uploadImageToMinio(file, fileName, header.Size)
 	if err != nil {
 		h.errorHandler(c, http.StatusInternalServerError, err)
 		return
@@ -142,55 +144,18 @@ func (h *Handler) UploadMaterialImage(c *gin.Context) {
 }
 
 // uploadImageToMinio загружает изображение в Minio
-func (h *Handler) uploadImageToMinio(file *multipart.FileHeader, fileName string) (string, error) {
+func (h *Handler) uploadImageToMinio(file multipart.File, fileName string, fileSize int64) (string, error) {
 	bucket := "images"
 	ctx := context.Background()
 
-	// Создаем bucket если не существует
-	exists, err := h.MinioClient.BucketExists(ctx, bucket)
-	if err != nil {
-		return "", err
-	}
-	if !exists {
-		err = h.MinioClient.MakeBucket(ctx, bucket, minio.MakeBucketOptions{})
-		if err != nil {
-			return "", err
-		}
-
-		// Устанавливаем публичный доступ для bucket
-		policy := `{
-			"Version": "2012-10-17",
-			"Statement": [
-				{
-					"Effect": "Allow",
-					"Principal": {"AWS": "*"},
-					"Action": ["s3:GetObject"],
-					"Resource": ["arn:aws:s3:::images/*"]
-				}
-			]
-		}`
-		err = h.MinioClient.SetBucketPolicy(ctx, bucket, policy)
-		if err != nil {
-			return "", err
-		}
-	}
-
-	// Открываем файл
-	src, err := file.Open()
-	if err != nil {
-		return "", err
-	}
-	defer src.Close()
-
 	// Загружаем в Minio
-	_, err = h.MinioClient.PutObject(ctx, bucket, fileName, src, file.Size, minio.PutObjectOptions{
-		ContentType: file.Header.Get("Content-Type"),
+	_, err := h.MinioClient.PutObject(ctx, bucket, fileName, file, fileSize, minio.PutObjectOptions{
+		ContentType: "image/jpeg", // или определите тип из header
 	})
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("failed to upload to Minio: %v", err)
 	}
 
-	// Возвращаем публичный URL
 	return fmt.Sprintf("http://localhost:9000/%s/%s", bucket, fileName), nil
 }
 
