@@ -44,6 +44,7 @@ import (
 func main() {
 	router := gin.Default()
 
+	handler.SetupCORS(router)
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	conf, err := config.NewConfig()

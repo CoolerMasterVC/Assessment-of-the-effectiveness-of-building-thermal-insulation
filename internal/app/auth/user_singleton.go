@@ -10,7 +10,7 @@ func SetCurrentUser(user *ds.User) {
 
 func GetCurrentUser() *ds.User {
 	if currentUser == nil {
-		// Возвращаем фиксированного пользователя (как требуется)
+		// Возвращаем фиксированного пользователя
 		return &ds.User{
 			ID:    1,
 			Login: "fixed_user",
