@@ -23,24 +23,32 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
-// @title Materials App API
-// @version 1.0
-// @description API for heat insulation materials and applications
+// @title           Materials App API
+// @version         1.0
+// @description     API for heat insulation materials and applications
+// @termsOfService  http://swagger.io/terms/
 
-// @contact.name API Support
-// @contact.url http://localhost:8080
-// @contact.email support@materials-app.com
+// @contact.name    API Support
+// @contact.url     http://localhost:8080
+// @contact.email   support@materials-app.com
 
-// @license.name MIT
-// @license.url https://opensource.org/licenses/MIT
+// @license.name    MIT
+// @license.url     https://opensource.org/licenses/MIT
 
-// @host localhost:8080
-// @BasePath /
+// @host            localhost:8080
+// @BasePath        /
+// @schemes         http
 
 // @securityDefinitions.apikey BearerAuth
 // @in header
 // @name Authorization
-// @description JWT Authorization header using the Bearer scheme
+// @type http
+// @scheme bearer
+// @bearerFormat JWT
+// @description Enter the token with the `Bearer ` prefix, e.g. "Bearer abcde12345"
+
+// @externalDocs.description  OpenAPI
+// @externalDocs.url          https://swagger.io/resources/open-api/
 func main() {
 	router := gin.Default()
 

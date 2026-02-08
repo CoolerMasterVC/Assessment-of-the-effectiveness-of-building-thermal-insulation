@@ -1,8 +1,12 @@
 {
+    "schemes": [
+        "http"
+    ],
     "swagger": "2.0",
     "info": {
         "description": "API for heat insulation materials and applications",
         "title": "Materials App API",
+        "termsOfService": "http://swagger.io/terms/",
         "contact": {
             "name": "API Support",
             "url": "http://localhost:8080",
@@ -17,89 +21,6 @@
     "host": "localhost:8080",
     "basePath": "/",
     "paths": {
-        "/api/applications": {
-            "get": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Get applications with filtering. For moderators - all applications, for users - only their applications",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Applications"
-                ],
-                "summary": "Get applications list",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Status filter",
-                        "name": "status",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Start date (YYYY-MM-DD)",
-                        "name": "start_date",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "End date (YYYY-MM-DD)",
-                        "name": "end_date",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/ds.MaterialsApplication"
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "type": "object"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "schema": {
-                            "type": "object"
-                        }
-                    }
-                }
-            }
-        },
-        "/api/applications/cart": {
-            "get": {
-                "description": "Get current user's draft application info",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Applications"
-                ],
-                "summary": "Get cart info",
-                "responses": {
-                    "200": {
-                        "description": "Cart information",
-                        "schema": {
-                            "type": "object"
-                        }
-                    }
-                }
-            }
-        },
         "/api/applications/{id}/complete": {
             "put": {
                 "security": [
@@ -155,7 +76,93 @@
                 }
             }
         },
-        "/api/applications/{id}/reject": {
+        "/api/mat_applics": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    },
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get applications with filtering. For moderators - all applications, for users - only their applications",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Applications"
+                ],
+                "summary": "Get applications list",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Status filter",
+                        "name": "status",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Start date (YYYY-MM-DD)",
+                        "name": "start_date",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "End date (YYYY-MM-DD)",
+                        "name": "end_date",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Lab1_internal_app_ds.MaterialsApplication"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "type": "object"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/mat_applics/cart": {
+            "get": {
+                "description": "Get current user's draft application info",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Applications"
+                ],
+                "summary": "Get cart info",
+                "responses": {
+                    "200": {
+                        "description": "Cart information",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/mat_applics/{id}/reject": {
             "put": {
                 "security": [
                     {
@@ -210,6 +217,124 @@
                 }
             }
         },
+        "/api/materials": {
+            "get": {
+                "description": "Get list of insulation materials",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Materials"
+                ],
+                "summary": "Get materials list",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Search filter",
+                        "name": "filter",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Lab1_internal_app_ds.Material"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/materials/{id}": {
+            "get": {
+                "description": "Get material details by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Materials"
+                ],
+                "summary": "Get material by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Material ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Lab1_internal_app_ds.Material"
+                        }
+                    },
+                    "404": {
+                        "description": "Material not found",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/materials/{id}/add-to-draft": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Add material to user's draft application",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Materials"
+                ],
+                "summary": "Add material to draft",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Material ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Area data",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Material added",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                }
+            }
+        },
         "/api/users/login": {
             "post": {
                 "description": "Authenticate user and return JWT token",
@@ -222,7 +347,7 @@
                 "tags": [
                     "Users"
                 ],
-                "summary": "User login",
+                "summary": "Login user",
                 "parameters": [
                     {
                         "description": "Login credentials",
@@ -352,7 +477,7 @@
                 "tags": [
                     "Users"
                 ],
-                "summary": "User registration",
+                "summary": "Register new user",
                 "parameters": [
                     {
                         "description": "User registration data",
@@ -382,7 +507,7 @@
         }
     },
     "definitions": {
-        "ds.ApplicationMaterial": {
+        "Lab1_internal_app_ds.ApplicationMaterial": {
             "type": "object",
             "properties": {
                 "area": {
@@ -392,14 +517,14 @@
                     "type": "string"
                 },
                 "material": {
-                    "$ref": "#/definitions/ds.Material"
+                    "$ref": "#/definitions/Lab1_internal_app_ds.Material"
                 },
                 "material_id": {
                     "type": "integer"
                 }
             }
         },
-        "ds.Material": {
+        "Lab1_internal_app_ds.Material": {
             "type": "object",
             "properties": {
                 "created_at": {
@@ -431,7 +556,7 @@
                 }
             }
         },
-        "ds.MaterialsApplication": {
+        "Lab1_internal_app_ds.MaterialsApplication": {
             "type": "object",
             "properties": {
                 "completed_at": {
@@ -441,7 +566,7 @@
                     "type": "string"
                 },
                 "creator": {
-                    "$ref": "#/definitions/ds.User"
+                    "$ref": "#/definitions/Lab1_internal_app_ds.User"
                 },
                 "creator_id": {
                     "type": "integer"
@@ -455,11 +580,11 @@
                 "materials": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/ds.ApplicationMaterial"
+                        "$ref": "#/definitions/Lab1_internal_app_ds.ApplicationMaterial"
                     }
                 },
                 "moderator": {
-                    "$ref": "#/definitions/ds.User"
+                    "$ref": "#/definitions/Lab1_internal_app_ds.User"
                 },
                 "moderator_id": {
                     "type": "integer"
@@ -481,7 +606,7 @@
                 }
             }
         },
-        "ds.User": {
+        "Lab1_internal_app_ds.User": {
             "type": "object",
             "properties": {
                 "created_at": {
@@ -501,10 +626,14 @@
     },
     "securityDefinitions": {
         "BearerAuth": {
-            "description": "JWT Authorization header using the Bearer scheme",
+            "description": "Enter the token with the `Bearer ` prefix, e.g. \"Bearer abcde12345\"",
             "type": "apiKey",
             "name": "Authorization",
             "in": "header"
         }
+    },
+    "externalDocs": {
+        "description": "OpenAPI",
+        "url": "https://swagger.io/resources/open-api/"
     }
 }

@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"Lab1/internal/app/auth"
 	"net/http"
 	"strconv"
 
@@ -22,7 +21,7 @@ func (h *Handler) RemoveMaterialFromApplication(c *gin.Context) {
 		return
 	}
 
-	user := auth.GetCurrentUser()
+	user := h.GetCurrentUserFromContext(c)
 	application, err := h.Repository.GetApplicationByID(uint(appID))
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Application not found"})
@@ -64,7 +63,7 @@ func (h *Handler) UpdateApplicationMaterial(c *gin.Context) {
 		return
 	}
 
-	user := auth.GetCurrentUser()
+	user := h.GetCurrentUserFromContext(c)
 	application, err := h.Repository.GetApplicationByID(uint(appID))
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Application not found"})

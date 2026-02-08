@@ -1,17 +1,17 @@
 basePath: /
 definitions:
-  ds.ApplicationMaterial:
+  Lab1_internal_app_ds.ApplicationMaterial:
     properties:
       area:
         type: number
       created_at:
         type: string
       material:
-        $ref: '#/definitions/ds.Material'
+        $ref: '#/definitions/Lab1_internal_app_ds.Material'
       material_id:
         type: integer
     type: object
-  ds.Material:
+  Lab1_internal_app_ds.Material:
     properties:
       created_at:
         type: string
@@ -32,14 +32,14 @@ definitions:
       thickness:
         type: number
     type: object
-  ds.MaterialsApplication:
+  Lab1_internal_app_ds.MaterialsApplication:
     properties:
       completed_at:
         type: string
       created_at:
         type: string
       creator:
-        $ref: '#/definitions/ds.User'
+        $ref: '#/definitions/Lab1_internal_app_ds.User'
       creator_id:
         type: integer
       id:
@@ -48,10 +48,10 @@ definitions:
         type: number
       materials:
         items:
-          $ref: '#/definitions/ds.ApplicationMaterial'
+          $ref: '#/definitions/Lab1_internal_app_ds.ApplicationMaterial'
         type: array
       moderator:
-        $ref: '#/definitions/ds.User'
+        $ref: '#/definitions/Lab1_internal_app_ds.User'
       moderator_id:
         type: integer
       outdoor_temp:
@@ -65,7 +65,7 @@ definitions:
       total_savings:
         type: number
     type: object
-  ds.User:
+  Lab1_internal_app_ds.User:
     properties:
       created_at:
         type: string
@@ -76,6 +76,9 @@ definitions:
       login:
         type: string
     type: object
+externalDocs:
+  description: OpenAPI
+  url: https://swagger.io/resources/open-api/
 host: localhost:8080
 info:
   contact:
@@ -86,50 +89,10 @@ info:
   license:
     name: MIT
     url: https://opensource.org/licenses/MIT
+  termsOfService: http://swagger.io/terms/
   title: Materials App API
   version: "1.0"
 paths:
-  /api/applications:
-    get:
-      consumes:
-      - application/json
-      description: Get applications with filtering. For moderators - all applications,
-        for users - only their applications
-      parameters:
-      - description: Status filter
-        in: query
-        name: status
-        type: string
-      - description: Start date (YYYY-MM-DD)
-        in: query
-        name: start_date
-        type: string
-      - description: End date (YYYY-MM-DD)
-        in: query
-        name: end_date
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/ds.MaterialsApplication'
-            type: array
-        "401":
-          description: Unauthorized
-          schema:
-            type: object
-        "500":
-          description: Internal server error
-          schema:
-            type: object
-      security:
-      - BearerAuth: []
-      summary: Get applications list
-      tags:
-      - Applications
   /api/applications/{id}/complete:
     put:
       consumes:
@@ -165,7 +128,49 @@ paths:
       summary: Complete application
       tags:
       - Applications
-  /api/applications/{id}/reject:
+  /api/mat_applics:
+    get:
+      consumes:
+      - application/json
+      description: Get applications with filtering. For moderators - all applications,
+        for users - only their applications
+      parameters:
+      - description: Status filter
+        in: query
+        name: status
+        type: string
+      - description: Start date (YYYY-MM-DD)
+        in: query
+        name: start_date
+        type: string
+      - description: End date (YYYY-MM-DD)
+        in: query
+        name: end_date
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/Lab1_internal_app_ds.MaterialsApplication'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            type: object
+      security:
+      - BearerAuth: []
+      - BearerAuth: []
+      summary: Get applications list
+      tags:
+      - Applications
+  /api/mat_applics/{id}/reject:
     put:
       consumes:
       - application/json
@@ -200,7 +205,7 @@ paths:
       summary: Reject application
       tags:
       - Applications
-  /api/applications/cart:
+  /api/mat_applics/cart:
     get:
       description: Get current user's draft application info
       produces:
@@ -213,6 +218,82 @@ paths:
       summary: Get cart info
       tags:
       - Applications
+  /api/materials:
+    get:
+      consumes:
+      - application/json
+      description: Get list of insulation materials
+      parameters:
+      - description: Search filter
+        in: query
+        name: filter
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/Lab1_internal_app_ds.Material'
+            type: array
+      summary: Get materials list
+      tags:
+      - Materials
+  /api/materials/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get material details by ID
+      parameters:
+      - description: Material ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Lab1_internal_app_ds.Material'
+        "404":
+          description: Material not found
+          schema:
+            type: object
+      summary: Get material by ID
+      tags:
+      - Materials
+  /api/materials/{id}/add-to-draft:
+    post:
+      consumes:
+      - application/json
+      description: Add material to user's draft application
+      parameters:
+      - description: Material ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Area data
+        in: body
+        name: input
+        required: true
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Material added
+          schema:
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Add material to draft
+      tags:
+      - Materials
   /api/users/login:
     post:
       consumes:
@@ -236,7 +317,7 @@ paths:
           description: Unauthorized
           schema:
             type: object
-      summary: User login
+      summary: Login user
       tags:
       - Users
   /api/users/logout:
@@ -317,12 +398,14 @@ paths:
           description: Bad request
           schema:
             type: object
-      summary: User registration
+      summary: Register new user
       tags:
       - Users
+schemes:
+- http
 securityDefinitions:
   BearerAuth:
-    description: JWT Authorization header using the Bearer scheme
+    description: Enter the token with the `Bearer ` prefix, e.g. "Bearer abcde12345"
     in: header
     name: Authorization
     type: apiKey

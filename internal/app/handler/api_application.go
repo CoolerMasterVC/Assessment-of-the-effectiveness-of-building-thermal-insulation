@@ -16,6 +16,7 @@ import (
 // @Tags Applications
 // @Accept json
 // @Produce json
+// @Security BearerAuth
 // @Param status query string false "Status filter"
 // @Param start_date query string false "Start date (YYYY-MM-DD)"
 // @Param end_date query string false "End date (YYYY-MM-DD)"
@@ -23,7 +24,7 @@ import (
 // @Success 200 {array} ds.MaterialsApplication
 // @Failure 401 {object} object "Unauthorized"
 // @Failure 500 {object} object "Internal server error"
-// @Router /api/applications [get]
+// @Router /api/mat_applics [get]
 func (h *Handler) GetApplications(c *gin.Context) {
 	user := h.GetCurrentUserFromContext(c)
 	if user == nil {
@@ -154,7 +155,7 @@ func (h *Handler) CompleteApplication(c *gin.Context) {
 // @Failure 400 {object} object "Bad request"
 // @Failure 403 {object} object "Forbidden"
 // @Failure 404 {object} object "Not found"
-// @Router /api/applications/{id}/reject [put]
+// @Router /api/mat_applics/{id}/reject [put]
 func (h *Handler) RejectApplication(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -187,7 +188,7 @@ func (h *Handler) RejectApplication(c *gin.Context) {
 // @Tags Applications
 // @Produce json
 // @Success 200 {object} object "Cart information"
-// @Router /api/applications/cart [get]
+// @Router /api/mat_applics/cart [get]
 func (h *Handler) GetCartInfo(c *gin.Context) {
 	user := h.GetCurrentUserFromContext(c)
 

@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"Lab1/internal/app/auth"
 	"Lab1/internal/app/ds"
 	"context"
 	"fmt"
@@ -17,7 +16,14 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-// GET /api/materials
+// @Summary Get materials list
+// @Description Get list of insulation materials
+// @Tags Materials
+// @Accept json
+// @Produce json
+// @Param filter query string false "Search filter"
+// @Success 200 {array} ds.Material
+// @Router /api/materials [get]
 func (h *Handler) GetMaterials(c *gin.Context) {
 	filter := c.Query("filter")
 
@@ -30,7 +36,15 @@ func (h *Handler) GetMaterials(c *gin.Context) {
 	c.JSON(http.StatusOK, materials)
 }
 
-// GET /api/materials/:id
+// @Summary Get material by ID
+// @Description Get material details by ID
+// @Tags Materials
+// @Accept json
+// @Produce json
+// @Param id path int true "Material ID"
+// @Success 200 {object} ds.Material
+// @Failure 404 {object} object "Material not found"
+// @Router /api/materials/{id} [get]
 func (h *Handler) GetMaterial(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -223,23 +237,22 @@ func (h *Handler) DeleteMaterial(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"status": "deleted"})
 }
 
-// POST /api/materials/:id/add-to-draft
+// @Summary Add material to draft
+// @Description Add material to user's draft application
+// @Tags Materials
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param id path int true "Material ID"
+// @Param input body object true "Area data"
+// @Success 200 {object} object "Material added"
+// @Router /api/materials/{id}/add-to-draft [post]
 func (h *Handler) AddMaterialToDraft(c *gin.Context) {
-	user := auth.GetCurrentUser()
-
-	// Получаем или создаем черновик
-	application, err := h.Repository.GetUserDraft(user.ID)
-	if err != nil {
-		h.errorHandler(c, http.StatusInternalServerError, err)
+	// Получаем пользователя из контекста (правильный способ)
+	user := h.GetCurrentUserFromContext(c)
+	if user == nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "authentication required"})
 		return
-	}
-
-	if application == nil {
-		application, err = h.Repository.CreateDraft(user.ID)
-		if err != nil {
-			h.errorHandler(c, http.StatusInternalServerError, err)
-			return
-		}
 	}
 
 	materialID, err := strconv.Atoi(c.Param("id"))
@@ -256,10 +269,28 @@ func (h *Handler) AddMaterialToDraft(c *gin.Context) {
 		return
 	}
 
-	if err := h.Repository.AddMaterialToApplication(application.ID, uint(materialID), request.Area); err != nil {
-		h.errorHandler(c, http.StatusInternalServerError, err)
+	// Получаем или создаем черновик
+	application, err := h.Repository.GetUserDraft(user.ID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"application_id": application.ID})
+	if application == nil {
+		application, err = h.Repository.CreateDraft(user.ID)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+	}
+
+	if err := h.Repository.AddMaterialToApplication(application.ID, uint(materialID), request.Area); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"application_id": application.ID,
+		"message":        "Material added to draft",
+	})
 }

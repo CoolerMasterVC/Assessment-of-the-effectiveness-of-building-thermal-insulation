@@ -10,13 +10,12 @@ import (
 	"github.com/golang-jwt/jwt"
 )
 
-// Register регистрирует нового пользователя
-// @Summary User registration
+// @Summary Register new user
 // @Description Register a new user
 // @Tags Users
 // @Accept json
 // @Produce json
-// @Param input body object true "User registration data" example({"login": "string", "password": "string"})
+// @Param input body object true "User registration data"
 // @Success 201 {object} object "User created"
 // @Failure 400 {object} object "Bad request"
 // @Router /api/users/register [post]
@@ -59,13 +58,12 @@ func (h *Handler) Register(c *gin.Context) {
 	})
 }
 
-// Login аутентифицирует пользователя
-// @Summary User login
+// @Summary Login user
 // @Description Authenticate user and return JWT token
 // @Tags Users
 // @Accept json
 // @Produce json
-// @Param input body object true "Login credentials" example({"login": "string", "password": "string"})
+// @Param input body object true "Login credentials"
 // @Success 200 {object} object "Login successful"
 // @Failure 401 {object} object "Unauthorized"
 // @Router /api/users/login [post]
@@ -149,7 +147,6 @@ func (h *Handler) Logout(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"status": "logged out"})
 }
 
-// GetCurrentUser возвращает профиль текущего пользователя
 // @Summary Get current user
 // @Description Get current user profile information
 // @Tags Users
